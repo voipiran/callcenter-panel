@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[105],{83744:(e,n)=>{n.Z=(e,n)=>{const t=e.__vccOpts||e;for(const[e,c]of n)t[e]=c;return t}},21105:(e,n,t)=>{t.r(n),t.d(n,{default:()=>r});var c=t(88253);const o={},r=(0,t(83744).Z)(o,[["render",function(e,n){return(0,c.openBlock)(),(0,c.createElementBlock)("div",null," About Component ")}]])}}]);

@@ -1,0 +1,52 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production"
+  },
+  "devDependencies": {
+    "axios": "^0.27.2",
+    "laravel-mix": "^6.0.6",
+    "lodash": "^4.17.19",
+    "postcss": "^8.1.14",
+    "resolve-url-loader": "^5.0.0",
+    "vue-loader": "^16.2.0"
+  },
+  "dependencies": {
+    "@chenfengyuan/vue-number-input": "2",
+    "@kyvg/vue3-notification": "^2.4.1",
+    "@vueform/multiselect": "^2.5.6",
+    "@vueform/toggle": "^2.1.2",
+    "devextreme": "^22.1.5",
+    "devextreme-vue": "^22.1.5",
+    "filepond": "^4.30.4",
+    "filepond-plugin-file-encode": "^2.1.10",
+    "filepond-plugin-file-validate-type": "^1.2.8",
+    "filepond-plugin-image-preview": "^4.6.11",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.25",
+    "moment-jalaali": "0.9.4",
+    "pinia": "^2.0.21",
+    "sass": "1.42.1",
+    "sass-loader": "10.2.0",
+    "table-export": "^1.0.2",
+    "vee-validate": "^4.7.4",
+    "vue": "^3.2.36",
+    "vue-audio-visual": "^2.5.0",
+    "vue-filepond": "^7.0.3",
+    "vue-good-table-next": "^0.2.1",
+    "vue-i18n": "9",
+    "vue-multiselect": "^3.0.0-alpha.2",
+    "vue-numeric-input": "^2.0.0",
+    "vue-regex-input": "^1.0.2",
+    "vue-router": "^4.1.6",
+    "vue3-persian-datetime-picker": "^1.2.2",
+    "vue3-simple-file-input": "^1.0.3",
+    "vue3-slider": "^1.8.0"
+  }
+}

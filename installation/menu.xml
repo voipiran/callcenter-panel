@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<module> 
+  <menulist> 
+    <menuitem menuid="voipiran" desc="VOIPIRAN"
+parent="" module="no" link="" order="21"> 
+      <permissions> 
+        <group id="1" name="administrator" desc="total access"></group> 
+      </permissions> 
+    </menuitem> 
+
+<menuitem menuid="callstats" desc="Call Stats"
+parent="voipiran" module="no" link="voipiran/stats/" order="69"> 
+      <permissions> 
+        <group id="1" name="administrator" desc="total access"></group> 
+      </permissions> 
+    </menuitem> 
+  </menulist> 
+
+</module>
