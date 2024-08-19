@@ -1,7 +1,5 @@
 #!/bin/bash
 
-##curl -L https://github.com/voipiran/callcenter-panel-dev/archive/refs/heads/master.zip -o /tmp/callcenter-panel-dev.zip && sudo mkdir -p /var/www/panel && sudo unzip /tmp/callcenter-panel-dev.zip -d /tmp && sudo cp -r /tmp/callcenter-panel-dev-master/* /var/www/panel/ && sudo chown -R www-data:www-data /var/www/panel && sudo chmod -R 755 /var/www/panel && rm /tmp/callcenter-panel-dev.zip && rm -rf /tmp/callcenter-panel-dev-master
-##curl -L -H "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" -o /tmp/callcenter-panel-dev.zip https://github.com/voipiran/callcenter-panel-dev/archive/refs/heads/master.zip && sudo mkdir -p /var/www/panel && sudo unzip /tmp/callcenter-panel-dev.zip -d /tmp && sudo cp -r /tmp/callcenter-panel-dev-master/* /var/www/panel/ && sudo chown -R www-data:www-data /var/www/panel && sudo chmod -R 755 /var/www/panel && rm /tmp/callcenter-panel-dev.zip && rm -rf /tmp/callcenter-panel-dev-master
 
 echo "Install VOIPIRAN CallCenter Panel"
 echo "VOIPIRAN.io"
