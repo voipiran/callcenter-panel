@@ -184,8 +184,6 @@ import VueMultiselect from 'vue-multiselect'
 // import input number 
 import VueNumberInput from "@chenfengyuan/vue-number-input";
 
-var moment = require('moment-jalaali')
-
 export default {
   name: "automaticCall_edit_add",
   mixins: [helper],
@@ -276,8 +274,8 @@ export default {
         let datetime_init = this.datetime_init
         let datetime_end = this.datetime_end
         if (this.getLocale == 'fa') {
-          datetime_init = moment(this.datetime_init, 'jYYYY/jMM/jDD').format('YYYY/MM/DD')
-          datetime_end = moment(this.datetime_end, 'jYYYY/jMM/jDD').format('YYYY/MM/DD')
+          datetime_init = this.moment(this.datetime_init, 'jYYYY/jMM/jDD', 'YYYY/MM/DD')
+          datetime_end = this.moment(this.datetime_end, 'jYYYY/jMM/jDD', 'YYYY/MM/DD')
         }
 
         await this.$axios({
@@ -368,8 +366,8 @@ export default {
         this.daytime_init = req.data.data.daytime_init;
         this.daytime_end = req.data.data.daytime_end;
         if (this.$i18n.locale == 'fa') {
-          this.datetime_init = moment(req.data.data.datetime_init, 'YYYY/MM/DD').format('jYYYY/jMM/jDD');
-          this.datetime_end = moment(req.data.data.datetime_end, 'YYYY/MM/DD').format('jYYYY/jMM/jDD');
+          this.datetime_init = this.moment(req.data.data.datetime_init, 'YYYY/MM/DD', 'jYYYY/jMM/jDD');
+          this.datetime_end = this.moment(req.data.data.datetime_end, 'YYYY/MM/DD', 'jYYYY/jMM/jDD');
         }
 
 
@@ -389,7 +387,7 @@ export default {
           let date = new Date()
           let currentDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + "/"
           this.datetime_init = currentDate;
-          if (this.$i18n.locale == 'fa') this.datetime_init = moment(currentDate, 'YYYY/MM/DD').format('jYYYY/jMM/jDD');
+          if (this.$i18n.locale == 'fa') this.datetime_init = this.moment(currentDate, 'YYYY/MM/DD', 'jYYYY/jMM/jDD');
         } catch (error) {
           console.error(error);
         }

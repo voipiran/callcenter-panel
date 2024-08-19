@@ -2,6 +2,7 @@
 
 use App\Agent;
 use App\AutomaticCall;
+use App\GroupPermision;
 use App\Http\Controllers\Survey\OperatorSurveyController;
 use App\Http\Controllers\Survey\SettingSurveyController;
 use App\Licence;
@@ -14,6 +15,46 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 Route::get('/test', function () {
+    $queuePermission = Auth::user()->queues_available;
+    if ($queuePermission[0] == "all") {
+        $queue = Queues::get(['descr', 'extension']);
+    } else {
+        $queue = Queues::whereIn('extension', $queuePermission)->get(['descr', 'extension']);
+    }
+
+    return $queue;
+
+    $user = User::find(1);
+    $user->queues_available = ["8001", "8002"];
+    $user->save();
+    return $user;
+    $groupPermissions = GroupPermision::with('permissions')->get();
+    return $groupPermissions;
+
+    $data = DB::connection('mysql8_Survey')->table('survey')->select(
+        'survey_location',
+        'date_time',
+        DB::raw('MONTH(date_time) as month'),
+        DB::raw('SUM(survey_value) as total_survey'),
+        DB::raw('AVG(survey_value) as average_survey'),
+        DB::raw('COUNT(agent_number) as count_survey'),
+        DB::raw('SUM(survey_value) as total_survey')
+    )
+        ->whereBetween('date_time', ["2023/04/18 23:59:59", "2024/02/20 00:00:00"])
+        ->whereIn('agent_number', [3001, 3002])
+        ->whereIn('survey_location', ["8001"])
+        ->groupBy('survey_location', 'month')
+        ->get();
+
+
+
+    // Now $translatedData contains the mapped data or an empty collection if there are no results.
+
+
+    // Now $translatedData contains the mapped data or an empty collection if there are no results.
+
+
+    return $data;
 
     $test = new SettingSurveyController();
     return $test->updateQueuesConfig('add', '8001');

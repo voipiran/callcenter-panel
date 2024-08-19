@@ -24,11 +24,9 @@ exten => s,n,ExecIf($["${DB(AMPUSER/${AMPUSER}/cidname)}" != ""]?Set(CONNECTEDLI
 exten => s,n,GotoIf($["${custom}" = "AMP"]?customtrunk)
 
 exten => s,n,Set(__cnum=${CDR(cnum)})
-exten => s,n,NoOp(***********${CDR(cnum)})
 
 exten => s,n,Dial(${OUT_${DIAL_TRUNK}}/${OUTNUM},${TRUNK_RING_TIMER},F${DIAL_TRUNK_OPTIONS})
 ;;Added by VOIPIRAN
-
 
 exten => s,n,GotoIf($[${DIALSTATUS}=BUSY]?dialnext)
 exten => s,n,GotoIf($[${DIALSTATUS}=CHANUNAVAIL]?dialnext)

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\SettingsApp;
 use App\User;
+use Illuminate\Support\Facades\Lang;
 
 class AuthController extends Controller
 {
@@ -14,7 +15,9 @@ class AuthController extends Controller
     {
         $setting = SettingsApp::first();
 
-        return view('auth.login', ['locale_lang' =>  $setting->lang]);
+        $aboutMe = Lang::get('aboutMe');
+
+        return view('auth.login', ['locale_lang' =>  $setting->lang, 'aboutMe' => $aboutMe]);
     }
 
     public function postLogin(Request $request)

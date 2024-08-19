@@ -1,7 +1,6 @@
 <template>
   <div class="table-shadow">
     <notifications position="bottom left" :duration="5000" />
-
     <div class="pb-4">
       <h3>{{ $t('IROUTING.IROUTING.TITLE') }}</h3>
     </div>
@@ -25,9 +24,15 @@
             <td class="text-center">{{ item.route_name_title }}</td>
             <td class="text-center">{{ item.route_desc }}</td>
             <td class="text-center">{{ showLableDate(item.timespan) }}</td>
-            <td class="text-center">{{ item.play_agent_num == 1 ? $t('IROUTING.IROUTING.ENABLE') : $t('IROUTING.IROUTING.DISABLE') }}</td>
+            <td class="text-center">
+              <span v-if="item.play_agent_num == 1" class="badge badge-info p-2"> {{ $t('IROUTING.IROUTING.ENABLE') }}</span>
+              <span v-else> {{ $t('IROUTING.IROUTING.DISABLE') }}</span>
+            </td>
             <td class="text-center">{{ item.accept_digit == 'd' ? $t('IROUTING.IROUTING.All_NUM') : item.accept_digit }}</td>
-            <td class="text-center">{{ item.enable == 1 ? $t('IROUTING.IROUTING.ENABLE') : $t('IROUTING.IROUTING.DISABLE') }}</td>
+              <td class="text-center">
+              <span v-if="item.enable == 1" class="badge badge-info p-2"> {{ $t('IROUTING.IROUTING.ENABLE') }}</span>
+              <span v-else> {{ $t('IROUTING.IROUTING.DISABLE') }}</span>
+            </td>
             <td class="text-center">{{ item.priority }}</td>
             <td class="text-center">{{ item.agent_num_prefix ? item.agent_num_prefix : '' }}</td>
             <td>

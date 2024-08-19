@@ -29,20 +29,16 @@
           </h5>
           <ul>
             <li>
-              <span>{{ $t('GENERAL.report.queue') }}</span
-              ><span>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.queue') }} : </span><b>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span>{{ $t('GENERAL.report.fromFilter') }}</span
-              ><span>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.fromFilter') }} : </span><b>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.toFilter') }}</span
-              ><span>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.toFilter') }} : </span><b>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.range') }}</span
-              ><span>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.range') }} : </span><b>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</b>
             </li>
           </ul>
         </div>
@@ -51,17 +47,16 @@
           <h5>{{ $t('STATS.UN_ANS.detail.title') }}</h5>
           <ul>
             <li>
-              <span> {{ $t('STATS.UN_ANS.detail.unAnswered') }} </span><span>{{ unAnswered.details.detail.count ? unAnswered.details.detail.count : 0 }} {{ $t('GENERAL.call') }}</span>
+              <span> {{ $t('STATS.UN_ANS.detail.unAnswered') }} : </span><b>{{ unAnswered.details.detail.count ? unAnswered.details.detail.count : 0 }} {{ $t('GENERAL.call') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.UN_ANS.detail.delay') }} </span><span v-html="unAnswered.details.detail.time ? secondsToDay(unAnswered.details.detail.time / 1000 / unAnswered.details.detail.count) : 0"></span>
+              <span> {{ $t('STATS.UN_ANS.detail.delay') }} : </span><b v-html="unAnswered.details.detail.time ? secondsToDay(unAnswered.details.detail.time / 1000 / unAnswered.details.detail.count) : '-'"></b>
             </li>
             <li>
-              <span> {{ $t('STATS.UN_ANS.detail.num') }} </span><span>{{ unAnswered.details.numInQueue ? parseInt(unAnswered.details.numInQueue.numInQueue) : '-' }} {{ $t('GENERAL.person') }}</span>
+              <span> {{ $t('STATS.UN_ANS.detail.num') }} : </span><b>{{ unAnswered.details.numInQueue ? parseInt(unAnswered.details.numInQueue.numInQueue) : 0 }} {{ $t('GENERAL.person') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.UN_ANS.detail.avgDelay') }}</span
-              ><span v-html="unAnswered.details.detail.delay ? secondsToDay(unAnswered.details.detail.delay / unAnswered.details.detail.count) : 0"></span>
+              <span> {{ $t('STATS.UN_ANS.detail.avgDelay') }} : </span><b v-html="unAnswered.details.detail.delay ? secondsToDay(unAnswered.details.detail.delay / unAnswered.details.detail.count) : 0"></b>
             </li>
           </ul>
         </div>
@@ -152,6 +147,21 @@
         <!-- chart -->
         <div class="col-12 col-md-6">
           <barChart :data="unAnswered.queueUnAnswered"></barChart>
+        </div>
+      </div>
+
+      <!--  نمودار میانگین زمان انتظار در ساعت -->
+      <div class="table-shadow row" v-if="unAnswered.chartDelayAnswered" id="chartDelayAnswered">
+        <div class="col-12">
+          <!-- title -->
+          <div class="d-flex">
+            <div class="guide" v-if="$t('STATS.DIS.chartDelayAnswered.GUIDE')">
+              <p>{{ $t('STATS.DIS.chartDelayAnswered.GUIDE') }}</p>
+            </div>
+            <h5 class="m-0">{{ $t('STATS.DIS.chartDelayAnswered.title') }}</h5>
+          </div>
+          <!-- chart -->
+          <barChart :data="unAnswered.chartDelayAnswered" :convertTime="true" :customLabel="'Chart.avg'"></barChart>
         </div>
       </div>
 
@@ -269,8 +279,8 @@ import { useGeneral } from '../../js/pinia/general'
 
 // helper
 import helper from '../../js/helper'
+import pdfExport from '../../js/pdfExport'
 
-var moment = require('moment-jalaali')
 
 // import chart
 import barChart from '../chart/BarChart.vue'
@@ -281,7 +291,7 @@ import { VueGoodTable } from 'vue-good-table-next';
 
 export default {
   name: 'unAnswered',
-  mixins: [helper],
+  mixins: [helper, pdfExport],
   data() {
     return {
       isLoading: false,
@@ -441,6 +451,7 @@ export default {
         }
       ],
 
+
     }
   },
   methods: {
@@ -471,8 +482,8 @@ export default {
           'queues': queues,
           'agents': agents,
           'timeFilter': this.home.timeFilter,
-          'toFilter': this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
-          'fromFilter': this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
+          'toFilter': this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
+          'fromFilter': this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
         }
         let req = await this.$axios({
           url: '/stats/unAnsweredActions',
@@ -487,6 +498,35 @@ export default {
             count: parseInt(item.count)
           };
         })
+
+
+        // <!--  نمودار میانگین زمان انتظار در ساعت -->
+        let addAllHours = [];
+        for (const hour of Array.from(Array(24).keys())) {
+          let duplicate = false;
+          req.data.waitByTime.map((item) => {
+            if (item.hour == hour)
+              duplicate = item;
+          })
+
+          if (!duplicate)
+            addAllHours.push({
+              data1Answered: 0,
+              hour: hour.toString(),
+            })
+          else
+            addAllHours.push(duplicate)
+        }
+
+        let chartDelayAnswered = addAllHours.map((item) => {
+          return {
+            'lable': item.hour,
+            [this.$t('STATS.DIS.chartDelayAnswered.avgDelay')]: parseFloat(item.data1Answered)
+
+          }
+        })
+
+        this.unAnswered.chartDelayAnswered = chartDelayAnswered
 
         /**end save req for show in page unAnswered */
       } catch (error) {
@@ -532,8 +572,8 @@ export default {
           'queues': queues,
           'agents': agents,
           'timeFilter': this.home.timeFilter,
-          'toFilter': this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
-          'fromFilter': this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
+          'toFilter': this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
+          'fromFilter': this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
           'export': exportRequest
 
         }
@@ -563,7 +603,6 @@ export default {
           }
         })
 
-        console.log('test 1:', this.unAnswered.unAnsweredCallsDetail);
 
       } catch (error) {
         console.error(error);

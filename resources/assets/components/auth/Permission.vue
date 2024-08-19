@@ -24,12 +24,6 @@
             <h5 class="m-0">{{ $t('AUTH.Permission.Index.title') }}</h5>
           </div>
 
-          <div class="export" v-if="!isLoadingExport && false">
-            <div class="pdf" @click="tableExport('permissionDetail', 'pdf')" :title="$t('GENERAL.pdfExport')"></div>
-            <div class="excel" @click="tableExport('permissionDetail', 'xls')" :title="$t('GENERAL.excelExport')"></div>
-            <div class="csv" @click="tableExport('permissionDetail', 'csv')" :title="$t('GENERAL.csvExport')"></div>
-          </div>
-
           <div class="loader-wait-request mx-2" style="width: 20px; height: 20px" v-if="isLoadingExport"></div>
         </div>
 
@@ -176,11 +170,8 @@ export default {
   .operate {
     display: flex;
   }
-}
-</style>
-
-<style scoped>
-.part-title {
-  height: 39.5px;
+  .part-title {
+    height: 39.5px;
+  }
 }
 </style>

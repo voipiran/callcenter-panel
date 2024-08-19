@@ -140,8 +140,6 @@ import VueMultiselect from 'vue-multiselect'
 // import input number 
 import VueNumberInput from "@chenfengyuan/vue-number-input";
 
-var moment = require('moment-jalaali')
-
 import vueFilePond from "vue-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
@@ -214,7 +212,7 @@ export default {
 
         let date_time = this.date_time
         if (this.getLocale == 'fa') {
-          date_time = moment(this.date_time, 'jYYYY/jM/jD').format('YYYY/MM/DD')
+          date_time = this.moment(this.date_time, 'jYYYY/jM/jD', 'YYYY/MM/DD')
         }
 
         await this.$axios({
@@ -285,7 +283,7 @@ export default {
         /** fit date time */
         this.date_time = req.data.data.date_time;
         if (this.$i18n.locale == 'fa') {
-          this.date_time = moment(req.data.data.date_time, 'YYYY/M/D').format('jYYYY/jMM/jDD');
+          this.date_time = this.moment(req.data.data.date_time, 'YYYY/M/D', 'jYYYY/jMM/jDD');
         }
 
         /** set file in audio player */

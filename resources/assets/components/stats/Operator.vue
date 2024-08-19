@@ -30,20 +30,16 @@
           </h5>
           <ul>
             <li>
-              <span>{{ $t('GENERAL.report.queue') }}</span
-              ><span>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.queue') }} : </span><b>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span>{{ $t('GENERAL.report.fromFilter') }}</span
-              ><span>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.fromFilter') }} : </span><b>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.toFilter') }}</span
-              ><span>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.toFilter') }} : </span><b>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.range') }}</span
-              ><span>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.range') }} : </span><b>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</b>
             </li>
           </ul>
         </div>
@@ -52,17 +48,16 @@
           <h5>{{ $t('STATS.OPERATOR.detail.title') }}</h5>
           <ul>
             <li>
-              <span> {{ $t('STATS.OPERATOR.detail.Agents') }} </span><span>{{ operator.details ? operator.details.length : 0 }} {{ $t('GENERAL.person') }}</span>
+              <span> {{ $t('STATS.OPERATOR.detail.Agents') }} : </span><b>{{ operator.details ? operator.details.length : 0 }} {{ $t('GENERAL.person') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.OPERATOR.detail.avgSession') }} </span><span> {{ $t('STATS.OPERATOR.detail.undefine') }}</span>
+              <span> {{ $t('STATS.OPERATOR.detail.avgSession') }} : </span><b> {{ $t('STATS.OPERATOR.detail.undefine') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.OPERATOR.detail.shortestSession') }} </span><span> {{ $t('STATS.OPERATOR.detail.undefine') }}</span>
+              <span> {{ $t('STATS.OPERATOR.detail.shortestSession') }} : </span><b> {{ $t('STATS.OPERATOR.detail.undefine') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.OPERATOR.detail.longestSession') }}</span
-              ><span> {{ $t('STATS.OPERATOR.detail.undefine') }}</span>
+              <span> {{ $t('STATS.OPERATOR.detail.longestSession') }} : </span><b> {{ $t('STATS.OPERATOR.detail.undefine') }}</b>
             </li>
           </ul>
         </div>
@@ -329,8 +324,8 @@ import { useGeneral } from '../../js/pinia/general'
 
 // helper
 import helper from '../../js/helper'
+import pdfExport from '../../js/pdfExport'
 
-var moment = require('moment-jalaali')
 
 // import chart
 import barChart from '../chart/BarChart.vue'
@@ -341,7 +336,7 @@ import { VueGoodTable } from 'vue-good-table-next';
 
 export default {
   name: 'operator',
-  mixins: [helper],
+  mixins: [helper, pdfExport],
   data() {
     return {
       isLoading: false,
@@ -692,8 +687,8 @@ export default {
           'queues': queues,
           'agents': agents,
           'timeFilter': this.home.timeFilter,
-          'toFilter': this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
-          'fromFilter': this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
+          'toFilter': this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
+          'fromFilter': this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
         }
 
 
@@ -957,8 +952,8 @@ export default {
           'queues': queues,
           'agents': agents,
           'timeFilter': this.home.timeFilter,
-          'toFilter': this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
-          'fromFilter': this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
+          'toFilter': this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
+          'fromFilter': this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
           'export': exportRequest
 
         }

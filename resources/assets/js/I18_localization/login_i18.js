@@ -1,5 +1,5 @@
 const fa = {
-    title: 'ورود به ویپ ایران',
+    title: 'ورود به پنل مرکزتماس',
     user_name: 'نام کاربری',
     password: 'کلمه عبور',
     remember_me: 'مرا به خاطر بسپار',
@@ -11,7 +11,7 @@ const fa = {
 }
 
 const en = {
-    title: ' Login to VoipIran',
+    title: ' Login to Panel',
     user_name: 'userName',
     password: 'password',
     remember_me: 'Remember Me',

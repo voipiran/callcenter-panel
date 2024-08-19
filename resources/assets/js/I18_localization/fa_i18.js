@@ -48,22 +48,22 @@ export default {
         /** منوی اصلی */
         SideMenu: {
             Dashboard: {
-                mainTitle: 'داشبورد',
+                mainTitle: 'میزکار',
             },
             Auth: {
                 mainTitle: 'مدیریت کاربران',
-                users: 'مدیریت کاربران',
-                roles: 'مدیریت نقش ها',
-                permission: 'مدیریت مجوزها',
+                users: 'کاربران',
+                roles: 'گروه ها',
+                permission: 'مجوز های گروه',
             },
             Stats: {
-                mainTitle: 'گزارش تماس',
-                home: 'انتخاب فیلتر',
+                mainTitle: 'گزارشات پیشرفته',
+                home: 'تنظیم جستجو',
                 answered: 'تماس های پاسخ داده شده',
                 unAnswered: 'تماس های بدون پاسخ',
-                distribution: 'امار توزیع تماس ها',
-                operator: 'آمار کارشناس',
-                search: 'جستجوی گزارشات',
+                distribution: 'تماس‌های توزیع‌شده',
+                operator: 'کارشناس',
+                search: 'جستجو',
                 realTime: 'نمایش زنده',
             },
             Irouting: { mainTitle: 'مسیریابی هوشمند' },
@@ -75,16 +75,19 @@ export default {
             },
             Survey: {
                 mainTitle: 'نظر سنجی ',
-                dashboard: 'داشبورد',
-                survey: 'گزارش نظرسنجی',
-                operator: 'گزارش اپراتورها',
+                dashboard: 'میزکار',
+                survey: 'گزارش نظرات',
+                operator: 'گزارش کارشناس ها',
                 setting: 'تنظیمات ',
             },
             Voipiran: {
-                mainTitle: 'ویپ ایران'
+                mainTitle: 'مرکز تماس'
             },
             Licence: {
-                mainTitle: 'مدیریت لایسنس ها',
+                mainTitle: 'مدیریت لایسنس',
+            },
+            call_request: {
+                mainTitle: 'درخواست تماس',
             }
         },
 
@@ -167,6 +170,7 @@ export default {
         btnAdd: 'افزودن',
         btnCancel: 'انصراف',
         btnOperation: 'عملیات',
+        btnFilter: 'تنظیمات جستجو',
 
         CHOOSE_FILE: "فایل مورد نظر را انتخاب کنید",
         CHOOSE_MULTISELECT: "انتخاب کنید",
@@ -217,7 +221,7 @@ export default {
     /** Setting PAGE */
     SETTING: {
         /** main titile */
-        title: 'تنظیمات',
+        title: 'تنظیمات عمومی',
 
         /** backup   */
         backup: {
@@ -279,7 +283,10 @@ export default {
             currentMonth: 'ماه جاری',
             last1Month: ' یک ماه گذشته',
             last3Month: ' سه ماه گذشته',
-            last1Years : ' سال گذشته', 
+            last1Years: ' سال گذشته',
+            currentYears: ' سال جاری',
+            lastYears: ' سال گذشته',
+
             /** زمان  */
             fromTime: ' زمان شروع',
             toTime: ' زمان پایان',
@@ -440,16 +447,31 @@ export default {
                 EndPosition: 'موقعیت هنگام خروج',
                 StartPosition: 'موقعیت هنگام ورود',
             },
+            // میانگین زمان انتظار در ساعت
+            wait: {
+                GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
+                title: 'میانگین زمان انتظار تماس های بدون  پاسخ  در ساعت ',
+                data: 'تاریخ',
+                answered: 'پاسخ داده شده',
+                pAnswered: ' درصد پاسخ داده شده',
+                unAnswered: ' بدون پاسخ',
+                pUnAnswered: ' درصد بدون پاسخ',
+                avgTime: ' میانگین مدت مکالمه ',
+                avgWait: ' میانگین زمان انتظار ',
+                login: 'ورود ',
+                logout: 'خروج ',
+
+            },
 
         },
 
         /** DISTRIBUTION PAGE */
         DIS: {
-            title: 'گزارش آمار توزیع تماس ها',
+            title: 'گزارش آمار تماس‌های توزیع‌شده',
             /** عنوان جزئیات  */
             detail: {
                 title: 'مجموع',
-                answered: ' تعداد تماس پاسخ داده شده:',
+                answered: 'تعداد تماس پاسخ داده شده',
                 unAnswered: 'تعداد تماس بدون پاسخ',
                 login: 'ورود کارشناس',
                 logout: 'خروج کارشناس',
@@ -518,10 +540,10 @@ export default {
                 answered: 'پاسخ داده شده',
                 unAnswered: 'پاسخ داده نشده',
             },
-            // نمودار میانگین زمان صحبت در ساعت
+            // نمودار میانگین زمان مکالمه در ساعت
             chartTimeAnswered: {
                 GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
-                title: 'میانگین زمان صحبت در ساعت',
+                title: 'میانگین زمان مکالمه در ساعت',
                 avgTime: 'متوسط زمان صحبت',
             },
             // نمودار میانگین زمان انتظار در ساعت
@@ -640,9 +662,9 @@ export default {
     /** -----------------------------------------start Irouting translate ------------------------ */
     IROUTING: {
         IROUTING: {
-            TITLE: "تنظیمات",
+            TITLE: "تنظیمات برنامه",
             ROUTE_NAME: "مسیریابی",
-            INTRODUCTION: "معرفی",
+            INTRODUCTION: "توضیح",
             TIMESPAN: "بازه زمانی",
             STATUS: "وضعیت",
             OPERATIONS: 'عملیات',
@@ -740,13 +762,17 @@ export default {
         title: 'تماس خودکار',
         Dashboard: {
             GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
-            title: 'داشبورد',
+            title: 'میزکار',
+            best_agent: {
+                GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
+                title: 'کارشناسان برتر یک ماه',
+            },
         },
         OperatorChart: {
             GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
-            title: 'نمودار اپراتور ',
+            title: 'نمودار کارشناس ',
             agent_name: 'نام کارشناس',
-            agent_number: 'شماره اپراتور ',
+            agent_number: 'شماره کارشناس ',
             survey_location: 'شماره صف ',
             activityChartOfTheYearBar: {
                 GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
@@ -758,6 +784,11 @@ export default {
                 title: 'نمودار فعالیت سال ',
                 avg: 'میانگین',
             },
+            activityDiagramHourlyBasis: {
+                GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
+                title: 'نمودار فعالیت ساعتی ',
+                avg: 'میانگین',
+            },
             satisfactionChart: {
                 GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
                 title: 'نمودار میزان رضایتمندی',
@@ -765,14 +796,14 @@ export default {
             },
             activityDiagramMonthlyBasis: {
                 GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
-                title: 'نمودار فعالیت اپراتورها به صورت ماهیانه',
+                title: 'نمودار فعالیت کارشناسها به صورت ماهیانه',
                 precentage: 'درصد',
             }
         },
         Operator: {
             GUIDE: '  لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد',
-            title: 'اپراتوها',
-            agent_number: 'شماره اپراتور',
+            title: 'کارشناس ها',
+            agent_number: 'شماره کارشناس',
             survey_location: 'شماره صف',
             time: 'تاریخ آخرین نظر',
             average_survey: 'میانگین نظرسنجی',
@@ -786,11 +817,16 @@ export default {
             id: 'شناسه',
             uniqueid: 'شناسه یکتا',
             time: 'تاریخ و زمان',
-            agent_number: 'شماره اپراتور',
+            agent_number: 'شماره کارشناس',
             agent_name: 'نام کارشناس',
             caller_number: 'شماره تماس گیرنده',
             caller_name: 'نام تماس گیرنده',
             survey_value: 'مقدار نظرسنجی',
+            survey_route: 'مکان نظرسنجی',
+            survey_location: "شماره صف",
+            inbound: 'تماس ورودی',
+            outbound: 'تماس خروجی',
+            directExtension: 'تماس مستقیم داخلی',
             customer_voice_path: 'صدای مکالمه',
             customer_message: ' پیام مشتری',
             notMessage: 'بدون محتوا',
@@ -811,12 +847,12 @@ export default {
             survey_voice: 'فایل صوتی نظرسنجی',
             survey_string: 'مقدار نظرسنجی',
             survey_queue: 'صف',
-            customer_voice_status: 'ضبط پیام مشتری',
-            customer_voice_limit: 'سقف امتیاز برای ضبط پیام',
-            survey_playagent: 'بیان شماره اپراتور',
+            customer_voice_status: 'ضبط پیام صوتی مشتری',
+            customer_voice_limit: 'سقف امتیاز برای ضبط پیام صوتی',
+            survey_playagent: 'بیان شماره کارشناس',
             survey_playagent_label0: 'غیرفعال',
-            survey_playagent_label1: 'شماره اپراتور',
-            survey_playagent_label2: 'نام اپراتور',
+            survey_playagent_label1: 'شماره کارشناس',
+            survey_playagent_label2: 'نام کارشناس',
             active: 'فعال',
             passive: 'غیر فعال',
             Edit: {
@@ -866,6 +902,13 @@ export default {
                 errorRepeatPassword: "رمز عبور با تکرار رمز عبور مغایرت دارد",
                 ErrorPassword: "رمز عبور نباید از هشت کاراکتر کمتر باشد",
                 ErrorRepeatPassword: "تکرار رمز عبور نباید از هشت کاراکتر کمتر باشد ",
+                queue: {
+                    /** راهنما صف */
+                    queueTitle: ' انتخاب صف های در دسترس',
+                    queueGuide: 'صف های مورد نظر خود را برای اعمال گزارشات انتخاب کنید.',
+                    checkboxAllQueue: 'فعال بودن تمام صف ها',
+                    errorQueueIsEmpty: 'انتخاب صف برای دسترسی الزامی می باشد'
+                }
             },
         },
         Roles: {
@@ -895,71 +938,6 @@ export default {
                 titleAdd: "افزودن مجوز",
                 titleEdit: "ویرایش مجوز"
             },
-            ListPermission: {
-                dashboard: "داشبورد",
-                number_formatter: "اصلاح شماره تماس گیرنده",
-                setting: "تنظیمات",
-                survey: "نظرسنجی",
-                irouting: "مسیریابی هوشمند",
-                automatic_call: "تماس های خودکار",
-                voipiranMainSite: "لینک ویپ ایران",
-                call_stat_plus: "گزارش تماس ها",
-                iroutings: {
-                    index: "مسیریابی هوشمند",
-                    edit: "ویرایش مسیریابی هوشمند",
-
-                },
-                surveyChild: {
-                    survey: {
-                        index: "گزارش نظرسنجی",
-                        edit: "ویرایش  گزارش نظرسنجی",
-                        remove: "حذف  گزارش نظرسنجی"
-                    },
-                    operator: "گزارش اپراتورها",
-                    setting: "تنظیمات نظرسنجی"
-                },
-                licence: {
-                    index: "مدیریت لایسنس ها",
-                    add: "افزودن لایسنس"
-                },
-                auth: {
-                    index: "نمایش کاربران-مجوزها-نقش ها",
-                    users: {
-                        index: "مدیریت کاربران",
-                        add: "افزودن کاربر",
-                        edit: "ویرایش کاربر",
-                        remove: "حذف کاربر"
-                    },
-                    roles: {
-                        index: "مدیریت نقش ها",
-                        remove: "حذف نقش",
-                        add: "افزودن نقش",
-                        edit: "ویرایش نقش"
-                    },
-                    permission: {
-                        index: "مدیریت مجوز ها",
-                        remove: "حذف مجوز ",
-                        add: "افزودن مجوز ",
-                        edit: "ویرایش مجوز "
-                    },
-
-                },
-                stats: {
-                    index: "گزارش تماس",
-                    distribution: "آمار توزیع تماس",
-                    operator: "آمار کارشناس",
-                    answered: "تماس های پاسخ داده شده",
-                    unAnswered: "تماس های بدون پاسخ",
-                    search: "جستجوی گزارشات",
-                    realTime: 'نمایش زنده',
-                },
-                automatic_calls: {
-                    showList: "لیست شماره ها",
-                    add: "افزودن تماس",
-                    remove: "حذف تماس ",
-                    edit: "ویرایش تماس"
-                }
-            }
         }
     },
     LICENCE: {
@@ -968,7 +946,7 @@ export default {
             app_name: "نام لایسنس",
             GUIDE: "لورم ایپسوم یا طرح‌نما فیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن می باشد",
             type: "نوع لایسنس",
-            app_verions: "ورژن",
+            app_verions: "نسخه",
             created_at: "تاریخ ایجاد",
             fullLicence: 'Full',
             liteLicence: 'Litle',
@@ -979,5 +957,158 @@ export default {
             titleAdd: "افزودن لایسنس",
             license: "کد لایسنس"
         }
+    },
+
+    /** chart lable and etc */
+    Chart: {
+        of: "از",
+        survey: "نظر",
+        rank: "امتیاز",
+        avg: 'میانگین',
+    },
+
+    /** modal setting in survey */
+    Modal: {
+        Setting: {
+
+            /** راهنما صف */
+            queueTitle: ' انتخاب صف',
+            queueGuide: 'صف های مورد نظر خود را برای اعمال گزارشات انتخاب کنید.',
+            /** راهنمای کارشناس */
+            agentTitle: '  انتخاب کارشناس ',
+            agentGuide: 'به صورت پیش فرض فقط کارشناس های تعریف شده در صف ها نمایش داده می شود، در صورت انتخاب گزینه نمایش همه، کارشناس های گذشته که در اکنون در صف نیستند نیز برای انتخاب نمایش داده می شوند.',
+
+            /** تاریخ */
+            timeGuide: 'انتخاب سال ....',
+            time: ' تاریخ ',
+
+            // دکمه نمایش گزارش 
+            btnSubmit: ' نمایش گزارش '
+
+        }
+    },
+
+    /** call request */
+    CallRequest: {
+        Index: {
+            title: "مدیریت درخواست تماس",
+            subTitle: 'ویرایش',
+            GUIDE: 'راهنمای نصب',
+            enable: 'فعال',
+            trunk_name: 'نام ترانک',
+            outbound_prefix: 'پیش شماره شهری',
+            callerid_name: 'نام تماس گیرنده',
+            callerid_number: 'شماره تماس گیرنده',
+            dial_logging: 'درج لاگ',
+            InstallGuide: `                
+            <div dir="rtl">
+            <h4 class="mb-4"> راهنمای استفاده</h4>
+            <ul>
+              <li style="list-style: square">لینک ارسال در خواست که IP سرور و در ادامه مسیر فایل سرویس خواهد بود. pbxURL=https://ISSABEL_IP/dialer/dial.php</li>
+              <li style="list-style: square">پارامتر dirکه جهت تماس را مشخص می کند. dir=inout</li>
+              <li style="list-style: square">تماس با شماره کارشناس و اتصال به شماره بیرونی dir=outin</li>
+              <li style="list-style: square">تماس با شماره بیرونی و اتصال به شماره داخلی dir=outout</li>
+              <li style="list-style: square">پارامتر in که شماره داخلی یا کارشناس قرار میگیرد</li>
+              <li style="list-style: square">پارامتر out1 که شماره بیرونی یا همان شهری قرار میگیرد</li>
+              <li style="list-style: square">پارامتر out2 که در داستان outout به عنوان شماره دوم بیرونی در نظر گرفته می شود.</li>
+            </ul>
+            <h6>مثال ها:</h6>
+            <div class="text-left">
+              <a href="#"> https://ISSABEL_IP/dialer/dial.php?dir=inout&in=2001&out1=09122103200</a>
+              <a href="#"> https://ISSABEL_IP/dialer/dial.php?dir=outin&in=2001&out1=09122103200</a>
+              <a href="#"> https://ISSABEL_IP/dialer/dial.php?dir=outout&out2=09122105050&out1=09122103200</a>
+              <a href="#"> https://ISSABEL_IP/dialer/dial.php?dir=inout&in=2001&out1=09122103200&cid=09122103200</a>
+              <a href="#"> https://ISSABEL_IP/dialer/dial.php?dir=inout&in=2001&out1=09122103200&cid=hamed 09122103200</a>
+              <a href="#"> https://ISSABEL_IP/dialer/dial.php?dir=outout&out2=09122105050&out1=09122103200&cid=43398000</a>
+            </div>
+          </div>
+            `
+        },
+    },
+
+    DASH: {
+        operator: 'تعداد کارشناس',
+        queue: 'تعداد صف',
+        callToDay: 'تماس امروز',
+        callAll: 'تعداد تماس کل',
+    },
+
+    DB: {
+        group_permision: {
+            'main': 'اصلی',
+            'stats': 'گزارشات پیشرفته',
+            'iroutings': 'مسیر یابی',
+            'callrequest': 'درخواست تماس',
+            'automatic_calls': 'تماس خودکار',
+            'survey': 'نظر سنجی',
+        },
+        permission: {
+            dashboard: "میزکار",
+            number_formatter: "اصلاح شماره تماس گیرنده",
+            setting: "تنظیمات",
+            survey: "نظرسنجی",
+            irouting: "مسیریابی هوشمند",
+            automatic_call: "تماس های خودکار",
+            voipiranMainSite: "لینک وب سایت",
+            call_stat_plus: "گزارش پیشرفته تماس",
+            call_request: "درخواست تماس",
+            iroutings: {
+                index: "مسیریابی هوشمند",
+                edit: "ویرایش مسیریابی هوشمند",
+
+            },
+            surveyChild: {
+                survey: {
+                    index: "گزارش نظرات",
+                    edit: "ویرایش  گزارش نظرسنجی",
+                    remove: "حذف  گزارش نظرسنجی"
+                },
+                operator: "گزارش کارشناس ها",
+                setting: "تنظیمات نظرسنجی"
+            },
+            licence: {
+                index: "مدیریت لایسنس ها",
+                add: "افزودن لایسنس"
+            },
+            auth: {
+                index: "نمایش کاربران-مجوزها-نقش ها",
+                users: {
+                    index: "مدیریت کاربران",
+                    add: "افزودن کاربر",
+                    edit: "ویرایش کاربر",
+                    remove: "حذف کاربر"
+                },
+                roles: {
+                    index: "مدیریت نقش ها",
+                    remove: "حذف نقش",
+                    add: "افزودن نقش",
+                    edit: "ویرایش نقش"
+                },
+                permission: {
+                    index: "مدیریت مجوز ها",
+                    remove: "حذف مجوز ",
+                    add: "افزودن مجوز ",
+                    edit: "ویرایش مجوز "
+                },
+
+            },
+            stats: {
+                index: "گزارشات پیشرفته",
+                distribution: "آمار توزیع تماس",
+                operator: "آمار کارشناس",
+                answered: "تماس های پاسخ داده شده",
+                unAnswered: "تماس های بدون پاسخ",
+                search: "جستجو",
+                realTime: 'نمایش زنده',
+            },
+            automatic_calls: {
+                showList: "لیست شماره ها",
+                add: "افزودن تماس",
+                remove: "حذف تماس ",
+                edit: "ویرایش تماس"
+            }
+        }
     }
+
+
 }

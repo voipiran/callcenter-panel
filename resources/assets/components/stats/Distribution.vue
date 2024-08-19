@@ -29,20 +29,16 @@
           </h5>
           <ul>
             <li>
-              <span>{{ $t('GENERAL.report.queue') }}</span
-              ><span>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.queue') }} : </span><b>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span>{{ $t('GENERAL.report.fromFilter') }}</span
-              ><span>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.fromFilter') }} : </span><b>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.toFilter') }}</span
-              ><span>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.toFilter') }} : </span><b>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.range') }}</span
-              ><span>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.range') }} : </span><b>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</b>
             </li>
           </ul>
         </div>
@@ -51,16 +47,16 @@
           <h5>{{ $t('STATS.DIS.detail.title') }}</h5>
           <ul>
             <li>
-              <span> {{ $t('STATS.DIS.detail.answered') }} </span><span>{{ distribution.details.answered }} {{ $t('GENERAL.call') }}</span>
+              <span> {{ $t('STATS.DIS.detail.answered') }} : </span><b>{{ distribution.details.answered }} {{ $t('GENERAL.call') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.DIS.detail.unAnswered') }} </span><span> {{ distribution.details.Unanswered }} {{ $t('GENERAL.call') }}</span>
+              <span> {{ $t('STATS.DIS.detail.unAnswered') }} : </span><b> {{ distribution.details.Unanswered }} {{ $t('GENERAL.call') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.DIS.detail.login') }} </span><span> {{ distribution.details.login }} {{ $t('GENERAL.person') }}</span>
+              <span> {{ $t('STATS.DIS.detail.login') }} : </span><b> {{ distribution.details.login }} {{ $t('GENERAL.person') }}</b>
             </li>
             <li>
-              <span> {{ $t('STATS.DIS.detail.logout') }} </span><span>{{ distribution.details.logout }} {{ $t('GENERAL.person') }}</span>
+              <span> {{ $t('STATS.DIS.detail.logout') }} : </span><b>{{ distribution.details.logout }} {{ $t('GENERAL.person') }}</b>
             </li>
           </ul>
         </div>
@@ -125,8 +121,6 @@
               <th>{{ $t('STATS.DIS.wait.pUnAnswered') }}</th>
               <th>{{ $t('STATS.DIS.wait.avgTime') }}</th>
               <th>{{ $t('STATS.DIS.wait.avgWait') }}</th>
-              <th>{{ $t('STATS.DIS.wait.login') }}</th>
-              <th>{{ $t('STATS.DIS.wait.logout') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -139,8 +133,6 @@
               <td>{{ td.countUnanswered ? ((td.countUnanswered * 100) / (td.countUnanswered * 1 + (td.countAnswered ? td.countAnswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</td>
               <td>{{ td.data2Answered ? secondsToDay(td.data2Answered, false, 'table') : 0 }}</td>
               <td>{{ td.data1Answered ? secondsToDay(td.data1Answered, false, 'table') : 0 }}</td>
-              <td>{{ td.countLogin ? td.countLogin : 0 }}</td>
-              <td>{{ td.countLogout ? td.countLogout : 0 }}</td>
             </tr>
           </tbody>
         </table>
@@ -201,8 +193,6 @@
               <th>{{ $t('STATS.DIS.dispersion.pUnAnswered') }}</th>
               <th>{{ $t('STATS.DIS.dispersion.avgTime') }}</th>
               <th>{{ $t('STATS.DIS.dispersion.avgWait') }}</th>
-              <th>{{ $t('STATS.DIS.dispersion.login') }}</th>
-              <th>{{ $t('STATS.DIS.dispersion.logout') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -214,8 +204,6 @@
               <td>{{ td.countUnanswered ? ((td.countUnanswered * 100) / (td.countUnanswered * 1 + (td.countAnswered ? td.countAnswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</td>
               <td>{{ td.data2Answered ? secondsToDay(td.data2Answered, false, 'table') : 0 }}</td>
               <td>{{ td.data1Answered ? secondsToDay(td.data1Answered, false, 'table') : 0 }}</td>
-              <td>{{ td.countLogin ? td.countLogin : 0 }}</td>
-              <td>{{ td.countLogout ? td.countLogout : 0 }}</td>
             </tr>
           </tbody>
         </table>
@@ -247,7 +235,7 @@
             <h5 class="m-0">{{ $t('STATS.DIS.chartTimeAnswered.title') }}</h5>
           </div>
           <!-- chart -->
-          <barChart :data="distribution.chartTimeAnswered"></barChart>
+          <barChart :data="distribution.chartTimeAnswered" :convertTime="true" :customLabel="'Chart.avg'"></barChart>
         </div>
       </div>
 
@@ -262,7 +250,7 @@
             <h5 class="m-0">{{ $t('STATS.DIS.chartDelayAnswered.title') }}</h5>
           </div>
           <!-- chart -->
-          <barChart :data="distribution.chartDelayAnswered"></barChart>
+          <barChart :data="distribution.chartDelayAnswered" :convertTime="true" :customLabel="'Chart.avg'"></barChart>
         </div>
       </div>
 
@@ -324,8 +312,6 @@
               <th>{{ $t('STATS.DIS.dispersionInWeek.pUnAnswered') }}</th>
               <th>{{ $t('STATS.DIS.dispersionInWeek.avgTime') }}</th>
               <th>{{ $t('STATS.DIS.dispersionInWeek.avgWait') }}</th>
-              <th>{{ $t('STATS.DIS.dispersionInWeek.login') }}</th>
-              <th>{{ $t('STATS.DIS.dispersionInWeek.logout') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -337,8 +323,6 @@
               <td>{{ td.countUnanswered ? ((td.countUnanswered * 100) / (td.countUnanswered * 1 + (td.countAnswered ? td.countAnswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</td>
               <td>{{ td.data2Answered ? secondsToDay(td.data2Answered, false, 'table') : 0 }}</td>
               <td>{{ td.data1Answered ? secondsToDay(td.data1Answered, false, 'table') : 0 }}</td>
-              <td>{{ td.countLogin ? td.countLogin : 0 }}</td>
-              <td>{{ td.countLogout ? td.countLogout : 0 }}</td>
             </tr>
           </tbody>
         </table>
@@ -370,7 +354,7 @@
             <h5 class="m-0">{{ $t('STATS.DIS.chartTimeAnsweredWeek.title') }}</h5>
           </div>
           <!-- chart -->
-          <barChart :data="distribution.chartTimeAnsweredWeek"></barChart>
+          <barChart :data="distribution.chartTimeAnsweredWeek" :convertTime="true" :customLabel="'Chart.avg'"></barChart>
         </div>
       </div>
 
@@ -433,8 +417,6 @@
               <th>{{ $t('STATS.DIS.dispersionInMonth.pUnAnswered') }}</th>
               <th>{{ $t('STATS.DIS.dispersionInMonth.avgTime') }}</th>
               <th>{{ $t('STATS.DIS.dispersionInMonth.avgWait') }}</th>
-              <th>{{ $t('STATS.DIS.dispersionInMonth.login') }}</th>
-              <th>{{ $t('STATS.DIS.dispersionInMonth.logout') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -446,8 +428,6 @@
               <td>{{ td.countUnanswered ? ((td.countUnanswered * 100) / (td.countUnanswered * 1 + (td.countAnswered ? td.countAnswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</td>
               <td>{{ td.data2Answered ? secondsToDay(td.data2Answered, false, 'table') : 0 }}</td>
               <td>{{ td.data1Answered ? secondsToDay(td.data1Answered, false, 'table') : 0 }}</td>
-              <td>{{ td.countLogin ? td.countLogin : 0 }}</td>
-              <td>{{ td.countLogout ? td.countLogout : 0 }}</td>
             </tr>
           </tbody>
         </table>
@@ -468,7 +448,7 @@ import { useDistribution } from '../../js/pinia/distribution'
 // helper
 import helper from '../../js/helper'
 
-var moment = require('moment-jalaali')
+import pdfExport from '../../js/pdfExport'
 
 // import chart
 import barChart from '../chart/BarChart.vue'
@@ -480,7 +460,7 @@ import { VueGoodTable } from 'vue-good-table-next';
 
 export default {
   name: 'distribution',
-  mixins: [helper],
+  mixins: [helper, pdfExport],
   data() {
     return {
       isLoading: false,
@@ -507,26 +487,7 @@ export default {
       },
 
       columnsWaitByDate: [
-        {
-          label: this.$t('STATS.DIS.wait.logout'),
-          field: 'countLogout',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
 
-        },
-        {
-          label: this.$t('STATS.DIS.wait.login'),
-          field: 'countLogin',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-
-        },
         {
           label: this.$t('STATS.DIS.wait.avgWait'),
           field: 'data1Answered',
@@ -597,26 +558,7 @@ export default {
       ],
 
       columnsWaitByTime: [
-        {
-          label: this.$t('STATS.DIS.dispersion.logout'),
-          field: 'countLogout',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
 
-        },
-        {
-          label: this.$t('STATS.DIS.dispersion.login'),
-          field: 'countLogin',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-
-        },
         {
           label: this.$t('STATS.DIS.dispersion.avgWait'),
           field: 'data1Answered',
@@ -687,26 +629,7 @@ export default {
       ],
 
       columnsAnsweredInWeek: [
-        {
-          label: this.$t('STATS.DIS.dispersionInWeek.logout'),
-          field: 'countLogout',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
 
-        },
-        {
-          label: this.$t('STATS.DIS.dispersionInWeek.login'),
-          field: 'countLogin',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-
-        },
         {
           label: this.$t('STATS.DIS.dispersionInWeek.avgWait'),
           field: 'data1Answered',
@@ -776,26 +699,7 @@ export default {
       ],
 
       columnsAnsweredInMonth: [
-        {
-          label: this.$t('STATS.DIS.dispersionInMonth.logout'),
-          field: 'countLogout',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
 
-        },
-        {
-          label: this.$t('STATS.DIS.dispersionInMonth.login'),
-          field: 'countLogin',
-          type: 'number',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-
-        },
         {
           label: this.$t('STATS.DIS.dispersionInMonth.avgWait'),
           field: 'data1Answered',
@@ -925,8 +829,8 @@ export default {
           'queues': queues,
           'agents': agents,
           'timeFilter': this.home.timeFilter,
-          'toFilter': this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
-          'fromFilter': this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
+          'toFilter': this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
+          'fromFilter': this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
         }
         let req = await this.$axios({
           url: '/stats/distributionActions',
@@ -980,7 +884,6 @@ export default {
             addAllHours.push(duplicate)
         }
         addAllHours;
-        console.log('mergedByTime :', addAllHours);
 
 
         /** generat data chart پاسخ داده شده / بدون پاسخ در ساعت */

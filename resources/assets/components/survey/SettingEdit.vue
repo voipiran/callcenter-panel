@@ -155,8 +155,18 @@ export default {
       customer_voice_limit: 5,
       survey_voice: 'survey-default.wav',
 
-      queueOption: [],
-      queue: null,
+      queueOption: [{
+        lable: this.$t(`SURVEY.Survey.outbound`) + " ( 8055 )",
+        code: "8055"
+      },
+      {
+        lable: this.$t(`SURVEY.Survey.directExtension`) + " ( 8056 )",
+        code: "8056"
+      }],
+      queue: {
+        lable: this.$t(`SURVEY.Survey.outbound`) + " ( 8055 )",
+        code: "8055"
+      },
 
       toggleOption: [{
         lable: this.$t('SURVEY.Setting.active'),
@@ -172,8 +182,8 @@ export default {
         code: '1'
       },
       customer_voice_status: {
-        lable: this.$t('SURVEY.Setting.active'),
-        code: '1'
+        lable: this.$t('SURVEY.Setting.passive'),
+        code: '0'
       },
 
       survey_playagentOption: [
@@ -442,5 +452,9 @@ export default {
   .filepond--drop-label.filepond--drop-label label {
     font-size: 12px !important;
   }
+}
+
+.filepond--credits {
+  display: none;
 }
 </style>

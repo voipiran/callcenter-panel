@@ -1,0 +1,11 @@
+Install node.js and yarn:
+
+yes | wget -qO- https://rpm.nodesource.com/setup_16.5.0 | sudo -E bash -
+yum -y install nodejs
+curl -L https://www.npmjs.com/install.sh | sh
+npm install -g npm@8
+yes | npm install -g yarn
+
+
+node
+yarn

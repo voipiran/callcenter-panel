@@ -64,4 +64,8 @@ export const routes = [
     { name: 'licence_create', path: '/licence/create', component: () => import("../../components/licence/LicenceCreate.vue"), },
     /** ---------------------------------- End Route licence ---------------------------------- */
 
+    /** ---------------------------------- Start Route licence ---------------------------------- */
+    { name: 'call_request', path: '/call_request', component: () => import("../../components/call_request/Index.vue"), },
+    /** ---------------------------------- End Route licence ---------------------------------- */
+
 ]

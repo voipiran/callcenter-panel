@@ -11,7 +11,7 @@ use App\Agent;
 use App\Events;
 use App\QueuesDetails;
 use DB;
-
+use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
@@ -51,7 +51,13 @@ class SearchController extends Controller
 				->select('agent as name', 'agent as extension')
 				->groupBy('agent')->get();
 
-			$queuesAvailable = Queues::get(['descr', 'extension']);
+			$queuePermission = Auth::user()->queues_available;
+			if ($queuePermission[0] == "all") {
+				$queuesAvailable = Queues::get(['descr', 'extension']);
+			} else {
+				$queuesAvailable = Queues::whereIn('extension', $queuePermission)->get(['descr', 'extension']);
+			}
+
 			$eventsAvailable = Events::all();
 
 			$query = DB::connection('mysql')->table('queue_stats')

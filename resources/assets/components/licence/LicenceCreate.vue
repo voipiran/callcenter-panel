@@ -46,12 +46,9 @@
 </template>
 
 <script>
-import helper from '../../js/helper'
 
 export default {
   name: "licenceCreate",
-  mixins: [helper],
-
   data() {
     return {
       isLoading: false,

@@ -1,14 +1,13 @@
 <template>
   <section>
-   
-    <DxPieChart id="pie" :data-source="data"   @point-click="pointClickHandler($event)" @legend-click="legendClickHandler($event)">
+    <DxPieChart id="pie" :data-source="data" @point-click="pointClickHandler($event)" @legend-click="legendClickHandler($event)" :palette="backgroundColors">
       <DxSeries argument-field="lable" value-field="value">
-        <DxLabel :visible="true">
+        <DxLabel :visible="true" :customizeText="customizeLabel">
           <DxConnector :visible="true" :width="1" />
         </DxLabel>
       </DxSeries>
       <DxSize width="500" />
-      <DxExport  :enabled="true" />
+      <DxExport :enabled="true" />
     </DxPieChart>
   </section>
 </template>
@@ -26,6 +25,12 @@ import DxPieChart, {
 export default {
   name: 'pieChart',
   props: ['data'],
+  data() {
+    return {
+      // Define custom background colors
+      backgroundColors: ['red', '#FFA500', '#d9d903', '#03d913', '#008000'],
+    }
+  },
   components: {
     DxPieChart,
     DxSize,
@@ -46,6 +51,11 @@ export default {
     },
     toggleVisibility(item) {
       item.isVisible() ? item.hide() : item.show();
+    },
+
+    customizeLabel({ argument, valueText }) {
+
+      return valueText + "<br>" + this.$t("Chart.survey");
     },
   },
 };

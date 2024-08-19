@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Licence;
 
-
 use App\Numberformatter;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Licence;
+use Illuminate\Support\Facades\Log;
 
 class LicenceController extends Controller
 {
 	public function action(Request $request)
 	{
-		
+
 		$method = $request->method;
 
 
@@ -27,7 +27,6 @@ class LicenceController extends Controller
 			case 'submitUpdate':
 				$licenceName = 'licence.add';
 				break;
-				
 		}
 
 		/** check permission
@@ -83,6 +82,8 @@ class LicenceController extends Controller
 	 */
 	public function submitUpdate($request)
 	{
+
+
 		$this->validate($request, [
 			'license' => 'required',
 		]);
@@ -110,12 +111,19 @@ class LicenceController extends Controller
 					$newLincence->app_name      = $program->name;
 					$newLincence->app           = $program->app;
 					$newLincence->app_verions   = $program->version;
+
 					$newLincence->save();
 
+
+					// run script after set licence
+					$script =	$this->runScript($program->app);
+
+				
 					return [
 						'status' => 200,
 						'message' => 'licence added successfully!',
-						'type' => 'licence-success'
+						'type' => 'licence-success',
+						'script' => $script,
 					];
 				}
 
@@ -185,5 +193,40 @@ class LicenceController extends Controller
 			return response()->json(['message' => 'success'], 200);
 		}
 		return response()->json(['message' => 'failed'], 403);
+	}
+
+	// run script after set licence
+	public	function runScript($kind)
+	{
+		$command = null;
+		switch ($kind) {
+			case 'survey':
+				$command='/var/www/html/panel/installSH/survey.sh';
+				break;
+			case 'callrequest':
+				$command='/var/www/html/panel/installSH/callrequest.sh';
+				break;
+			case 'call_stat_plus':
+				$command='/var/www/html/panel/installSH/stats.sh';
+				break;
+			case 'irouting':
+				$command='/var/www/html/panel/installSH/irouting.sh';
+				break;
+			case 'webphone':
+				$command='/var/www/html/panel/installSH/webphone.sh';
+				//$command = 'echo "Webphone TEST" > webphone.txt';
+				break;
+			case 'number_formatter':
+				$command='/var/www/html/panel/installSH/numberformatter.sh';
+				break;
+		}
+
+		if ($command) {
+			$output = '';
+			//$command='/var/www/html/panel/installSH/webphone.sh';
+			$output = shell_exec($command);
+			//Log::info('done', ['output' => $output, 'command' => $command]);
+			return ['command' => $command, 'status' => $output];
+		}
 	}
 }

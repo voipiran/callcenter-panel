@@ -19,7 +19,6 @@ import { useGeneral } from '../../js/pinia/general'
 // helper
 import helper from '../../js/helper'
 
-var moment = require('moment-jalaali')
 
 export default {
   name: 'settingComponent',

@@ -154,6 +154,15 @@ export default {
 
                         },
                         {
+                            route: '/survey/setting',
+                            icon: 'fa fa-cogs ',
+                            content: 'GENERAL.SideMenu.Survey.setting',
+                            visable: false,
+                            licence: false,
+                            name: 'surveyChild.setting',
+
+                        },
+                        {
                             route: '/survey/core/survey/',
                             icon: 'fa fa-pencil-square-o ',
                             content: 'GENERAL.SideMenu.Survey.survey',
@@ -170,16 +179,8 @@ export default {
                             licence: false,
                             name: 'surveyChild.operator',
 
-                        },
-                        {
-                            route: '/survey/setting',
-                            icon: 'fa fa-cogs ',
-                            content: 'GENERAL.SideMenu.Survey.setting',
-                            visable: false,
-                            licence: false,
-                            name: 'surveyChild.setting',
-
                         }
+
                     ]
                 },
                 /** number-formatter manu */
@@ -190,6 +191,15 @@ export default {
                     visable: false,
                     licence: false,
                     name: 'number_formatter',
+                },
+                /** call_request manu */
+                {
+                    route: '/call_request',
+                    icon: 'fa fa-mobile',
+                    content: 'GENERAL.SideMenu.call_request.mainTitle',
+                    visable: false,
+                    licence: false,
+                    name: 'callrequest',
                 },
                 /** setting menu */
                 {
@@ -209,6 +219,7 @@ export default {
                     licence: true,
                     name: 'licence.index'
                 },
+
 
             ],
             // object target and title div go id in top page
@@ -350,6 +361,7 @@ export default {
         },
         /** active current side menu */
         showActiveMenu(currentPath = null) {
+            // return;
             if (!currentPath) return this.$router.push("/")
 
             let currentMenu;

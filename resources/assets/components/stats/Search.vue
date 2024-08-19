@@ -202,8 +202,8 @@ import { useGeneral } from '../../js/pinia/general'
 
 // helper
 import helper from '../../js/helper'
+import pdfExport from '../../js/pdfExport'
 
-var moment = require('moment-jalaali')
 
 // multi select
 import VueMultiselect from 'vue-multiselect'
@@ -220,7 +220,7 @@ import { VueGoodTable } from 'vue-good-table-next';
 
 export default {
   name: 'search',
-  mixins: [helper],
+  mixins: [helper, pdfExport],
   data() {
     return {
       isLoading: false,
@@ -441,13 +441,13 @@ export default {
         }
 
 
-        let fromFilter = this.timeFilter ? (this.timeFilter.length ? moment(this.timeFilter[0] + '00:00', 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null) : null;
-        let fromFilterEndTime = this.timeFilter ? (this.timeFilter.length ? moment(this.timeFilter[0] + '23:59', 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null) : null;
-        let toFilter = this.timeFilter ? this.timeFilter[1] ? (this.timeFilter.length ? moment(this.timeFilter[1] + '23:59', 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null) : fromFilterEndTime : null;
+        let fromFilter = this.timeFilter ? (this.timeFilter.length ? this.moment(this.timeFilter[0] + '00:00', 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null) : null;
+        let fromFilterEndTime = this.timeFilter ? (this.timeFilter.length ? this.moment(this.timeFilter[0] + '23:59', 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null) : null;
+        let toFilter = this.timeFilter ? this.timeFilter[1] ? (this.timeFilter.length ? this.moment(this.timeFilter[1] + '23:59', 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null) : fromFilterEndTime : null;
 
         if (firstLoad) {
-          toFilter = this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null;
-          fromFilter = this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null;
+          toFilter = this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null;
+          fromFilter = this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null;
           if (!toFilter) return this.isLoading = false;
         }
 

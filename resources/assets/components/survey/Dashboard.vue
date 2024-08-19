@@ -3,7 +3,6 @@
     <OperatorChart source="dashboard" :isAllUsers="false"></OperatorChart>
   </div>
 </template>
-
 <script>
 
 import OperatorChart from "./OperatorChart.vue"
@@ -16,6 +15,3 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>

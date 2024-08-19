@@ -34,7 +34,7 @@
         </div>
 
         <!-- vue good table -->
-        <div class="automatica-call-table" dir="ltr">
+        <div class="automatica-call-table" dir="rtl">
           <vue-good-table :columns="columnsSurveySetting" :rows="surveyData" :search-options="optionsTable" :pagination-options="paginationOptions">
             <!-- customize fields  -->
             <template #table-row="props">
@@ -145,6 +145,8 @@
 
 // helper
 import helper from '../../js/helper'
+import pdfExport from '../../js/pdfExport'
+
 
 // import vue good table
 import { VueGoodTable } from 'vue-good-table-next';
@@ -152,7 +154,7 @@ import { VueGoodTable } from 'vue-good-table-next';
 
 export default {
   name: 'surveySetting',
-  mixins: [helper],
+  mixins: [helper, pdfExport],
   data() {
     return {
       isLoading: false,
@@ -189,61 +191,8 @@ export default {
 
       columnsSurveySetting: [
         {
-          label: this.$t('GENERAL.btnOperation'),
-          field: 'operate',
-          sortable: false
-        },
-        {
-          label: this.$t('SURVEY.Setting.survey_playagent'),
-          field: 'survey_playagent',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-        },
-        {
-          label: this.$t('SURVEY.Setting.customer_voice_limit'),
-          field: 'customer_voice_limit',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-        },
-        {
-          label: this.$t('SURVEY.Setting.customer_voice_status'),
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-          field: 'customer_voice_status'
-        },
-        {
           label: this.$t('SURVEY.Setting.survey_queue'),
           field: 'survey_queue',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-        },
-        {
-          label: this.$t('SURVEY.Setting.survey_string'),
-          field: 'survey_string',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-        },
-        {
-          label: this.$t('SURVEY.Setting.survey_voice'),
-          field: 'survey_voice',
-          filterOptions: {
-            enabled: true, // enable filter for this column
-            trigger: 'enter', //only trigger on enter not on keyup 
-          },
-        },
-        {
-          label: this.$t('SURVEY.Setting.survey_status'),
-          field: 'survey_status',
           filterOptions: {
             enabled: true, // enable filter for this column
             trigger: 'enter', //only trigger on enter not on keyup 
@@ -259,14 +208,68 @@ export default {
 
         },
         {
-          label: this.$t('SURVEY.Setting.id'),
-          field: 'id',
+          label: this.$t('SURVEY.Setting.survey_status'),
+          field: 'survey_status',
           filterOptions: {
             enabled: true, // enable filter for this column
             trigger: 'enter', //only trigger on enter not on keyup 
           },
+        },
+        {
+          label: this.$t('SURVEY.Setting.survey_voice'),
+          field: 'survey_voice',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('SURVEY.Setting.survey_string'),
+          field: 'survey_string',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('SURVEY.Setting.customer_voice_status'),
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+          field: 'customer_voice_status'
+        },
+        {
+          label: this.$t('SURVEY.Setting.customer_voice_limit'),
+          field: 'customer_voice_limit',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('SURVEY.Setting.survey_playagent'),
+          field: 'survey_playagent',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('GENERAL.btnOperation'),
+          field: 'operate',
+          sortable: false
+        },
 
-        }
+        // {
+        //   label: this.$t('SURVEY.Setting.id'),
+        //   field: 'id',
+        //   filterOptions: {
+        //     enabled: true, // enable filter for this column
+        //     trigger: 'enter', //only trigger on enter not on keyup 
+        //   },
+
+        // }
       ],
       surveyData: [],
       rowsExport: [],

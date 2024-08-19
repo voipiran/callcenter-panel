@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Queues;
 use App\Trunk;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
@@ -181,7 +182,13 @@ class AutomaticCallController extends Controller
 	public function getQueueOption()
 	{
 		try {
-			$queue = Queues::get(['descr', 'extension']);
+			$queuePermission = Auth::user()->queues_available;
+			if ($queuePermission[0] == "all") {
+				$queue = Queues::get(['descr', 'extension']);
+			} else {
+				$queue = Queues::whereIn('extension', $queuePermission)->get(['descr', 'extension']);
+			}
+
 			return [
 				'status' => 200,
 				'message' => 'success',

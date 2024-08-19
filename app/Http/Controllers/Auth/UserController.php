@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Queues;
 use App\Role;
 use App\SettingsApp;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Stmt\Return_;
 
 class UserController extends Controller
 {
@@ -92,10 +95,21 @@ class UserController extends Controller
         try {
             $data = Role::all();
 
+            // Retrieve the 'survey_queue' value from the 'settings' table as a JSON-encoded string
+            $q = [];
+            $queueDefineInSurveyString = DB::connection('mysql8_Survey')->table('settings')->get();
+            foreach ($queueDefineInSurveyString as $key => $value) {
+                $q[] = $value->survey_queue;
+            }
+
+            // Retrieve records from the 'Queues' table where 'extension' is in the array of 'survey_queue' values
+            $queue = Queues::whereIn('extension', $q)->get(['descr', 'extension']);
+
             return [
                 'status' => 200,
                 'message' => 'success',
                 'data' => $data,
+                'queue' => $queue,
             ];
         } catch (\Throwable $th) {
             return [
@@ -147,6 +161,8 @@ class UserController extends Controller
             $data->tel = $request->tel;
             $data->internal_tel = $request->internal_tel;
             $data->email = $request->email;
+
+            $data->queues_available = $request->queues_available;
 
             if ($request->password) {
                 $password =  $request->password;

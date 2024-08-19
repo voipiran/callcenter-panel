@@ -9,6 +9,9 @@ export const useAnswered = defineStore('answered', {
     hangUp: [],
     answeredByCallLength: null,
     answeredTransfer: null,
-    answeredCallsDetail: null
+    answeredCallsDetail: null,
+    waitByDate: null,
+    chartDelayAnswered: null
+
   })
 })

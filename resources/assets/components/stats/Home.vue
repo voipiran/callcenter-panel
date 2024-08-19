@@ -237,7 +237,8 @@
             <div class="col-12 col-md-6 date-holder">
               <div class="mb-2">{{ $t('STATS.HOME.fromFilter') }}</div>
 
-              <date-picker color="#5c659c"
+              <date-picker
+                color="#5c659c"
                 v-model="fromFilter"
                 :locale="getLocale"
                 :locale-config="{
@@ -258,7 +259,8 @@
             <!-- toFilter -->
             <div class="col-12 col-md-6 date-holder">
               <div class="mb-2">{{ $t('STATS.HOME.toFilter') }}</div>
-              <date-picker color="#5c659c"
+              <date-picker
+                color="#5c659c"
                 class="mt-2"
                 v-model="toFilter"
                 :locale="getLocale"
@@ -302,7 +304,7 @@
         <span v-if="!isLoading"> {{ $t('STATS.HOME.btnSubmit') }}</span>
         <!-- loader -->
         <div class="loader-ctn d-flex align-items-center justify-content-center" v-if="isLoading">
-          <div class="loader-wait-request" style="width: 20px; height: 20px;"></div>
+          <div class="loader-wait-request" style="width: 20px; height: 20px"></div>
         </div>
       </button>
     </div>
@@ -321,7 +323,6 @@ import { useAnswered } from '../../js/pinia/answered'
 
 import helper from '../../js/helper'
 
-var moment = require('moment-jalaali')
 
 export default {
   mixins: [helper],
@@ -646,8 +647,8 @@ export default {
       this.home.toFilterFaLable = this.home.toFilter = this.toFilter
 
       if (this.$i18n.locale == 'en') {
-        this.home.fromFilterFaLable = moment(this.home.fromFilterFaLable, 'jYYYY/jM/jD').format('YYYY/MM/DD')
-        this.home.toFilterFaLable = moment(this.home.toFilterFaLable, 'jYYYY/jM/jD').format('YYYY/MM/DD')
+        this.home.fromFilterFaLable = this.moment(this.home.fromFilterFaLable, 'jYYYY/jM/jD', 'YYYY/MM/DD')
+        this.home.toFilterFaLable = this.moment(this.home.toFilterFaLable, 'jYYYY/jM/jD', 'YYYY/MM/DD')
       }
 
     },

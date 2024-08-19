@@ -8,10 +8,11 @@ use App\Queues;
 use App\Agent;
 use App\QueuesDetails;
 use App\SettingsApp;
+use App\User;
 use DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\App;
-
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -123,7 +124,13 @@ class HomeController extends Controller
 			}
 
 
-			$queue = Queues::get(['descr', 'extension']);
+			$queuePermission = Auth::user()->queues_available;
+			if ($queuePermission[0] == "all") {
+				$queue = Queues::get(['descr', 'extension']);
+			} else {
+				$queue = Queues::whereIn('extension', $queuePermission)->get(['descr', 'extension']);
+			}
+
 			return [
 				'status' => 200,
 				'message' => 'success',

@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Queues;
 use App\QueuesDetails;
 use Illuminate\Support\Facades\DB;
+use App\Helpers;
+
 
 class OperatorSurveyController extends Controller
 {
@@ -69,13 +71,26 @@ class OperatorSurveyController extends Controller
 		/** set user according target page
 		 * if target == dashboard -> return all user else return one user
 		 */
-		$users = $this->getUserList($request);
+		$users = $request->users;
+		if (!$users) {
+			$users = getUserList($request);
+		}
 
 		/** set queue according role
 		 * if role == admin -> return all queue else return one queue
 		 */
-		$queues = $this->getUserQueuesParsed($request);
+		$queues = $request->queues;
+		if (!$queues) {
+			$queues = getUserQueuesParsed($request);
+		}
 
+		/*** get date filter */
+		$startDate = null;
+		$endDate = null;
+		if ($request->startDate && $request->endDate) {
+			$startDate = $request->startDate;
+			$endDate = $request->endDate;
+		}
 
 		try {
 			$max_survey = DB::connection('mysql8_Survey')->table('settings')->select('survey_string', 'survey_queue')->get();
@@ -90,15 +105,25 @@ class OperatorSurveyController extends Controller
 				)
 				->whereIn('agent_number', $users)
 				->whereIn('survey_location', $queues)
+				->orderBy(DB::raw("average_survey"), 'desc') // Order by average_survey in descending order
 				->groupBy('agent_number')
-				->groupBy('survey_location')->get();
+				->where(function ($query) use ($startDate, $endDate) {
+					if ($startDate && $endDate) {
+						$query->whereBetween('date_time', [$startDate, $endDate]);
+					}
+				})
+				->groupBy('survey_location');
 
-			// DB::raw("AVG(survey_value)*100)/$max_survey as satisfaction_percentage")
+			// filter by years
+			if ($request->date) {
+				$data->where('date_time', 'LIKE', "%$request->date%");
+			}
+
 
 			return [
 				'status' => 200,
 				'message' => 'success',
-				'data' => $data,
+				'data' => $data->get(),
 				'max_survey' => $max_survey
 			];
 		} catch (\Throwable $th) {
@@ -132,12 +157,15 @@ class OperatorSurveyController extends Controller
 		/** set user according target page
 		 * if target == dashboard -> return all user else return one user
 		 */
-		$users = $this->getUserList($request);
+		$users = getUserList($request);
 
 		/** set queue according role
 		 * if role == admin -> return all queue else return one queue
 		 */
-		$queues = $this->getUserQueuesParsed($request);
+		$queues = $request->queues;
+		if (!$queues) {
+			$queues = getUserQueuesParsed($request);
+		}
 
 		/** dateRange[0] == تاریخ فروردین ماه */
 		$data = [];
@@ -191,12 +219,15 @@ class OperatorSurveyController extends Controller
 		/** set user according target page
 		 * if target == dashboard -> return all user else return one user
 		 */
-		$users = $this->getUserList($request);
+		$users = getUserList($request);
 
 		/** set queue according role
 		 * if role == admin -> return all queue else return one queue
 		 */
-		$queues = $this->getUserQueuesParsed($request);
+		$queues = $request->queues;
+		if (!$queues) {
+			$queues = getUserQueuesParsed($request);
+		}
 
 
 		$data = DB::connection('mysql8_Survey')->table('survey')->select(
@@ -208,10 +239,23 @@ class OperatorSurveyController extends Controller
 			->whereIn('survey_location', $queues)
 			->groupBy('survey_value')
 			->get();
+
+		$activityDiagramHourlyBasis = DB::connection('mysql8_Survey')->table('survey')->select(
+			DB::raw('HOUR(date_time) as hour'),
+			DB::raw('AVG(survey_value) as average_survey'),
+			DB::raw('COUNT(survey_value) as count_survey')
+		)
+			->whereIn('agent_number', $users)
+			->whereBetween('date_time', [$request->startDate, $request->endDate])
+			->whereIn('survey_location', $queues)
+			->groupBy('hour')
+			->get();
+
 		return [
 			'status' => 200,
 			'message' => 'success',
-			'activityChartOfTheYearPie' => $data
+			'activityChartOfTheYearPie' => $data,
+			'activityDiagramHourlyBasis' => $activityDiagramHourlyBasis
 		];
 	}
 	/** --------------------------End get data Pie chart  نمودار فعالیت سال*/
@@ -221,7 +265,10 @@ class OperatorSurveyController extends Controller
 	public function satisfactionChart($request)
 	{
 
-		$queues = $this->getUserQueuesParsed($request);
+		$queues = $request->queues;
+		if (!$queues) {
+			$queues = getUserQueuesParsed($request);
+		}
 
 		/** dateRange[0] == تاریخ فروردین ماه */
 		$data = [];
@@ -323,13 +370,16 @@ class OperatorSurveyController extends Controller
 		/** set user according target page
 		 * if target == dashboard -> return all user else return one user
 		 */
-		$users = $this->getUserList($request);
+		$users = getUserList($request);
 
 		/** set queue according role
 		 * if role == admin -> return all queue else return one queue
 		 */
-		$queues = $this->getUserQueuesParsed($request);
 
+		$queues = $request->queues;
+		if (!$queues) {
+			$queues = getUserQueuesParsed($request);
+		}
 
 		//    WHERE date_time >= '$from[$i]' AND date_time <= '$to[$i]' 
 		/**
@@ -341,7 +391,8 @@ class OperatorSurveyController extends Controller
 		$data = DB::connection('mysql8_Survey')->table('survey')->select(
 			DB::raw('DAY(date_time) as day'),
 			'date_time',
-			DB::raw('AVG(survey_value) as average_survey')
+			DB::raw('AVG(survey_value) as average_survey'),
+			DB::raw('COUNT(survey_value) as count_survey')
 		)
 			->whereIn('agent_number', $users)
 			->whereBetween('date_time', [$request->startDate, $request->endDate])
@@ -357,73 +408,4 @@ class OperatorSurveyController extends Controller
 		];
 	}
 	/** -------------------------End نمودار فعالیت اپراتورها به صورت ماهیانه*/
-
-
-
-	/** return queue name according licence and role */
-	function getUserQueuesParsed($request)
-	{
-		$queues = Queues::get(['descr', 'extension']);
-		$allQueues = [];
-		foreach ($queues as $queue) {
-			$allQueues[] = $queue->extension;
-		};
-		return $allQueues;
-	}
-
-	/** set user according target page
-	 * if target == dashboard -> return all user else return one user
-	 */
-	public function getUserList($request)
-	{
-		/** return one user */
-		$users = [];
-		if ($request->page == 'operator') {
-			$users[] = $request->agent_number;
-			return $users;
-		}
-
-
-		/** return all users [for page dashboard and etc] */
-		// $data = DB::connection('mysql8_Survey')->table('survey')->groupBy('agent_number')->get();
-		// foreach ($data as $user) {
-		// 	$users[] = $user->agent_number;
-		// }
-		// return $users;
-
-
-		$agent = DB::connection('mysql')->table('queue_stats')
-			->select('agent as name', 'agent as extension')
-			->where('callid', 'MANAGER')
-			->groupBy('agent')->get();
-
-
-		/** get agent from table QueuesDetails */
-		$query = QueuesDetails::where('keyword', 'member')->groupBy('data')->get(['data']);
-		$agents = [];
-		foreach ($query as $item) {
-			$remove = str_replace('Local/', '', $item->data);
-			$remove = str_replace('@from-queue/n,0', '', $remove);
-			$agents[] = $remove;
-		}
-		$agent2 = Agent::whereIn('extension', $agents)->get(['name', 'extension']);
-
-		foreach ($agent2 as $newAgent) {
-			$dublicate = false;
-			foreach ($agent as $oldAgent) {
-				$dublicate = false;
-				if ($oldAgent->name == $newAgent->name)
-					$dublicate = true;
-			}
-			if ($dublicate == false)
-				array_push($agent, $newAgent);
-		}
-
-		$users = [];
-		foreach ($agent as $user) {
-			$users[] = $user->extension;
-		};
-		return $users;
-	}
-	/** --------------------------------- Start Get chart Data -------------------------- */
 }

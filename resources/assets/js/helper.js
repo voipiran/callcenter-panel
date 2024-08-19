@@ -1,17 +1,6 @@
 /**momentTimeZonejs, jalaliMoment */
-var moment = require('moment-jalaali')
-var momentZone = require('moment-timezone')
+var moment_ = require('moment-jalaali')
 
-
-
-/** import pinia */
-import { useHome } from '../js/pinia/home'
-
-/** csv export */
-var tblExport = require('table-export');
-// pdf export
-import jsPDF from './pdf_font/irsns-normal.js'
-import autoTable from 'jspdf-autotable';
 import loader from "../components/loader.vue"
 
 export default {
@@ -30,11 +19,8 @@ export default {
             if (!date)
                 return ''
 
-            // var utc = momentZone.utc(date).toDate()
-            // var local = momentZone(utc).local().format('YYYY-MM-DD HH:mm:ss')
-            // console.log("UTC Now ", date, "local now", local)
-            if (format) return moment(date, 'YYYY-M-D HH:mm:ss').format(format)
-            return moment(date, 'YYYY-M-D HH:mm:ss').format('jYYYY/jMM/jDD HH:mm')
+            if (format) return moment_(date, 'YYYY-M-D HH:mm:ss').format(format)
+            return moment_(date, 'YYYY-M-D HH:mm:ss').format('jYYYY/jMM/jDD HH:mm')
         },
         miladiDate(currentDate, filterDate, format = null) {
 
@@ -42,37 +28,11 @@ export default {
             if (!date)
                 return ''
 
-            // var utc = momentZone.utc(date).toDate()
-            // var local = momentZone(utc).local().format('YYYY-MM-DD HH:mm:ss')
-            // console.log("UTC Now ", date, "local now", local)
-            // if (format) return moment(date, 'YYYY-M-D HH:mm:ss').format(format)
-            return moment(filterDate, 'jYYYY/jMM/jDD').format('YYYY-MM-DD') == moment(currentDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
-        },
-        /** export
-     * @param1 id table
-     * @param2 string type export
-     * @param3 string name file for export 
-     */
-        tableExport(idTable, kind = 'csv', nameExport = Date.now()) {
-            try {
-                if (kind == 'pdf') {
-                    const doc = new jsPDF('l', 'pt');
-                    doc.setFont("irsns", "normal");
-                    autoTable(doc, {
-                        html: `#${idTable}`,
-                        styles: { font: "irsns", halign: 'center' }
-                    })
-                    doc.save(`${nameExport}.pdf`)
-                    return
-                }
-                tblExport(idTable, nameExport, kind);
-            } catch (error) {
-                console.log(error);
-            }
+
+            return moment_(filterDate, 'jYYYY/jMM/jDD').format('YYYY-MM-DD') == moment_(currentDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
         },
         /** convert secend to day hours and minute */
         secondsToDay(seconds, enter = false, kind = false) {
-            console.log(kind);
             seconds = Number(seconds);
 
             if (!seconds) return 0 + this.$t("GENERAL.secend");
@@ -118,16 +78,19 @@ export default {
                 return false;
             }
         },
-    },
-    computed: {
-    },
-    setup() {
-        const home = useHome()
-        return {
-            home,
-        }
+        /**new jdate 
+         * @param miladi UTC date time
+        */
+        moment(date, format_input, format_output) {
+            if (!date)
+                return ''
+
+            if (format_input)
+                return moment_(date, format_input).format(format_output)
+            return moment_(date).format(format_output)
+        },
     },
     components: {
         loader
-    }
+    },
 }

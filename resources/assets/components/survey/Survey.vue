@@ -7,9 +7,23 @@
       <div class="d-flex align-content-center justify-content-between mb-3">
         <!-- title -->
         <h3>{{ $t('SURVEY.Survey.title') }}</h3>
-        <!-- {{-- refresh btn --}} -->
-        <div class="refresh-ctn">
-          <div @click="getData()" class="refresh"></div>
+        <!-- {{-- refresh btn and filter --}} -->
+        <div class="d-flex align-items-center">
+          <!-- search -->
+          <div style="cursor: pointer; margin: 0 20px; font-size: 12px" @click="displayModalSetting = true">
+            <span style="background-color: #f1eded; color: white; padding: 7px 12px; border: 3px solid white; border-left: none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25.002" height="25.002" viewBox="0 0 25.002 25.002">
+                <path id="search-alt-2-svgrepo-com" d="M11,6a5,5,0,0,1,5,5m.659,5.655L21,21M19,11a8,8,0,1,1-8-8A8,8,0,0,1,19,11Z" transform="matrix(0.259, 0.966, -0.966, 0.259, 21.133, -2.449)" fill="none" stroke="#8d8d8d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+              </svg>
+            </span>
+            <span style="background-color: black; color: white; padding: 7px 12px; border: 3px solid white">
+              {{ $t('GENERAL.btnFilter') }}
+            </span>
+          </div>
+          <!-- refresh -->
+          <div class="refresh-ctn">
+            <div @click="getData()" class="refresh"></div>
+          </div>
         </div>
       </div>
 
@@ -113,6 +127,7 @@
               <th>{{ $t('SURVEY.Survey.caller_number') }}</th>
               <th>{{ $t('SURVEY.Survey.caller_name') }}</th>
               <th>{{ $t('SURVEY.Survey.survey_value') }}</th>
+              <th>{{ $t('SURVEY.Survey.survey_route') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -127,6 +142,7 @@
               <td>{{ td.caller_number }}</td>
               <td>{{ td.caller_name }}</td>
               <td>{{ td.survey_value }}</td>
+              <td>{{ td.survey_route }}</td>
             </tr>
           </tbody>
         </table>
@@ -135,6 +151,9 @@
 
     <!-- loader -->
     <loader v-if="isLoading"></loader>
+
+    <!-- Get settings such as time and queue -->
+    <modalGetSettingVue :display="displayModalSetting" @close-modal="closeModal"></modalGetSettingVue>
   </div>
 </template>
 
@@ -142,16 +161,19 @@
 
 // helper
 import helper from '../../js/helper'
+import pdfExport from '../../js/pdfExport'
+
+import modalGetSettingVue from '../modalGetSetting.vue';
+import { useSurvey } from '../../js/pinia/survey';
+import { computed, watch, getCurrentInstance } from 'vue';
 
 // import vue good table
 import { VueGoodTable } from 'vue-good-table-next';
 
-/** use for search date in vue-good-table */
-var moment = require('moment-jalaali')
 
 export default {
   name: 'surveyCore',
-  mixins: [helper],
+  mixins: [helper, pdfExport],
   data() {
     return {
       isLoading: false,
@@ -215,7 +237,7 @@ export default {
             trigger: 'enter', //only trigger on enter not on keyup 
             filterFn: function (currentDate, filterDate) {
               console.log('currentDate, filterDate :', currentDate, filterDate);
-              return moment(filterDate, 'jYYYY/jMM/jDD').format('YYYY-MM-DD') == moment(currentDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD') || moment(filterDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD') == moment(currentDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
+              return this.moment(filterDate, 'jYYYY/jMM/jDD', 'YYYY-MM-DD') == this.moment(currentDate, 'YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD') || this.moment(filterDate, 'YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD') == this.moment(currentDate, 'YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD');
             }
           },
         },
@@ -254,6 +276,22 @@ export default {
           },
         },
         {
+          label: this.$t('SURVEY.Survey.survey_route'),
+          field: 'survey_route',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('SURVEY.Survey.survey_location'),
+          field: 'survey_location',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
           label: this.$t('SURVEY.Survey.survey_value'),
           field: 'survey_value',
           filterOptions: {
@@ -279,6 +317,8 @@ export default {
       ],
       surveyData: [],
       rowsExport: [],
+      displayModalSetting: false,
+
     }
   },
 
@@ -290,12 +330,28 @@ export default {
         let req = await this.$axios({
           url: '/survey/core-survey/action',
           data: {
-            method: 'getData'
+            method: 'getData',
+            date: this.surveyStore.fromFilter ? this.moment(this.surveyStore.fromFilter, 'jYYYY', 'YYYY') : null,
+            queues: this.surveyStore.queuesSelected.length ? this.surveyStore.queuesSelected.map((item) => item.code) : null,
+            users: this.surveyStore.agentsSelected.length ? this.surveyStore.agentsSelected.map((item) => item.code) : null
           },
         })
 
-        this.surveyData = req.data.data
-
+        //translate sourvay-route
+        this.surveyData = req.data.data.map((data) => {
+          switch (data.survey_location) {
+            case "8055":
+              data.survey_route = this.$t(`SURVEY.Survey.outbound`);
+              break;
+            case "8056":
+              data.survey_route = this.$t(`SURVEY.Survey.directExtension`);
+              break;
+            default:
+              data.survey_route = this.$t(`SURVEY.Setting.survey_queue`);
+              break;
+          }
+          return data;
+        });
 
         this.rowsExport = this.surveyData;
       } catch (error) {
@@ -385,17 +441,48 @@ export default {
     },
     filePathVoicesGenerator(path) {
       return `${API}storage/survey/voices/${path}`
-    }
+    },
+    // Update the display value in the parent component
+    closeModal() {
+      this.displayModalSetting = false;
+    },
 
   },
 
   components: {
-    VueGoodTable
+    VueGoodTable,
+    modalGetSettingVue
   },
 
   async mounted() {
     this.getData();
-  }
+  },
+  setup() {
+    const surveyStore = useSurvey();
+
+    const key = computed(() => surveyStore.key);
+
+    // Access the current component instance
+    const { ctx } = getCurrentInstance();
+
+    // // Watch for changes in multiple properties
+    // watch([queues, fromFilter], ([newQueues, newFromFilter], [oldQueues, oldFromFilter]) => {
+    //   // Call your function with the updated values
+    //   ctx.setAllDate();
+    // });
+
+
+    // Watch for changes in multiple properties
+    watch([key], ([newKey], [oldKey]) => {
+      // Call your function with the updated values
+      ctx.getData();
+    });
+
+
+    return {
+      surveyStore,
+    };
+  },
 }
 </script>
 

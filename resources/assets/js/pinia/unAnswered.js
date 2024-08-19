@@ -5,6 +5,8 @@ export const useUnAnswered = defineStore('unAnswered', {
     hangUp: [],
     details: null,
     queueUnAnswered: [],
-    unAnsweredCallsDetail: null
+    unAnsweredCallsDetail: null,
+    waitByDate: null,
+    chartDelayAnswered: null
   })
 })

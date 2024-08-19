@@ -35,6 +35,7 @@ class DatabaseVoipiran extends Command
 	public function handle()
 	{
 		// Create database and tables 
+		$this->voipiran_callrequest();
 		$this->voipiran();
 		$this->voipiran_irouting();
 		$this->voipiran_numberformatter();
@@ -189,6 +190,42 @@ class DatabaseVoipiran extends Command
 				PRIMARY KEY (`event_id`)
 			  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
         ');
+		}
+	}
+
+	
+	/** crate database voipiran_callrequest */
+	public function voipiran_callrequest()
+	{
+		// create data base
+		DB::statement("CREATE DATABASE IF NOT EXISTS voipiran_callrequest");
+
+		// Check if table queue_stats already exists
+		if (!Schema::connection('mysql9_call_request')->hasTable('settings')) {
+			// Create the table
+			DB::connection('mysql9_call_request')->statement('
+			CREATE TABLE `settings` (
+				`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+				`enable` tinyint(1) NOT NULL,
+				`trunk_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+				`outbound_prefix` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+				`callerid_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+				`callerid_number` int(11) NOT NULL,
+				`dial_logging` tinyint(1) NOT NULL,
+				PRIMARY KEY (`id`)
+			  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+        ');
+		}
+
+		// TRUNCATE TABLE
+		DB::connection('mysql9_call_request')->statement('TRUNCATE TABLE settings');
+
+		// Check if table already exists
+		if (Schema::connection('mysql9_call_request')->hasTable('settings')) {
+			// Create the table
+			DB::connection('mysql9_call_request')->statement("
+			INSERT INTO `settings` (`id`, `enable`, `trunk_name`, `outbound_prefix`, `callerid_name`, `callerid_number`, `dial_logging`) VALUES (1,	0,	'SIP/TCI',	'9',	'MyCompany',	99009900,	0);
+        ");
 		}
 	}
 }

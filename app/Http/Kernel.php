@@ -39,5 +39,6 @@ class Kernel extends HttpKernel
 		'LicenceSurvey' => 'App\Http\Middleware\LicenceSurvey',
 		'LicenceNumberFormatter' => 'App\Http\Middleware\LicenceNumberFormatter',
 		'LicenceAutomaticCall' => 'App\Http\Middleware\LicenceAutomaticCall',
+		'LicenceCallRequest' => 'App\Http\Middleware\LicenceCallRequest',
 	];
 }

@@ -25,6 +25,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     /** import survey route */
     require 'routes/LicenceRoute.php';
+
+    /** import call requst route */
+    require 'routes/CallRequstRoute.php';
 });
 
 /** import route test */

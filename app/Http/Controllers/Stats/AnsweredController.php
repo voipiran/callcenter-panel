@@ -87,6 +87,10 @@ class AnsweredController extends Controller
 			// دلیل قطع شدن مکالمه
 			$hangUp = $this->getHangUpState($request);
 
+			/** میانگین زمان انتظار در ساعت*/
+			$waitByDate = $this->getWaitByDate($request);
+
+
 			/** ---  تماس های پاسخ داده شده بر اساس مدت مکالمه Start -------------- */
 			$answeredByCallLength = $this->GetAnsweredByCallLength($request);
 
@@ -94,6 +98,9 @@ class AnsweredController extends Controller
 			$answeredTransfer = $this->getAnsweredTransfer($request);
 
 			$timeFilter = calcTime($request);
+
+			/** پراکندگی تماس ها در ساعت */
+			$waitByTime = $this->getWaitByTime($request);
 
 			return [
 				'status' => 200,
@@ -105,7 +112,9 @@ class AnsweredController extends Controller
 				'qAnswered' => $qAnswered,
 				'answeredByCallLength' => $answeredByCallLength,
 				'answeredTransfer' => $answeredTransfer,
-				'timeFilter' => $timeFilter
+				'timeFilter' => $timeFilter,
+				'waitByDate' => $waitByDate,
+				'waitByTime' => $waitByTime,
 			];
 		} catch (\Throwable $th) {
 			return [
@@ -115,6 +124,43 @@ class AnsweredController extends Controller
 			];
 		}
 	}
+
+
+	/**-----پراکندگی تماس ها در ساعت Start --------------------*/
+	public function getWaitByTime($request)
+	{
+		try {
+			$answered = $this->CalculationWaitByTime($request, ['COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER'], 'Answered');
+
+			return $answered;
+		} catch (\Throwable $th) {
+			return [];
+		}
+	}
+
+
+	public function CalculationWaitByTime($request, $event, $name, $where = false)
+	{
+		try {
+			$calc = DB::connection('mysql')->table('queue_stats')
+				->select(DB::raw('HOUR(time) as hour'), DB::raw("COUNT(agent) as count$name"), DB::raw("ROUND(AVG(data1),2) as data1$name"), DB::raw("ROUND(AVG(data2),2) as data2$name"), DB::raw("SUM(data3) as data3$name"))
+				->groupBy('hour')
+				->whereIn('queuename', $request->queues)
+				->whereIn('event', $event);
+
+
+			/** get by date time */
+			if ($request->timeFilter || ($request->fromFilter && $request->toFilter)) {
+				$time = calcTime($request);
+				$calc = $calc->whereBetween('time', $time);
+			}
+
+			return $calc->get();
+		} catch (\Throwable $th) {
+			return null;
+		}
+	}
+	/**-----پراکندگی تماس ها در ساعت End --------------------*/
 	/** get lisrt agent and detail answered for fill table تماس های پاسخ داده شده توسط اپراتور in answered component */
 	public function listOfAgents($request)
 	{
@@ -412,4 +458,46 @@ class AnsweredController extends Controller
 			return [];
 		}
 	}
+
+
+
+	/**----- میانگین زمان انتظار در ساعت Start --------------------*/
+	public function getWaitByDate($request)
+	{
+		try {
+			$answered = $this->CalculationWaitByDate($request, ['COMPLETEAGENT', 'COMPLETECALLER'], 'Answered');
+			$Unanswered = $this->CalculationWaitByDate($request, ['ABANDON', 'EXITWITHTIMEOUT', 'EXITWITHKEY', 'EXITEMPTY'], 'Unanswered');
+			$logout = $this->CalculationWaitByDate($request,  ['REMOVEMEMBER'], 'Logout', ['callid', 'MANAGER']);
+			$login = $this->CalculationWaitByDate($request,  ['ADDMEMBER'], 'Login', ['callid', 'MANAGER']);
+			return [
+				'answered' => $answered,
+				'Unanswered' => $Unanswered,
+				'logout' => $logout,
+				'login' => $login,
+			];
+		} catch (\Throwable $th) {
+			return [];
+		}
+	}
+	public function CalculationWaitByDate($request, $event, $name, $where = false)
+	{
+		try {
+			$calc = DB::connection('mysql')->table('queue_stats')
+				->select(DB::raw('DATE(time) as date'), DB::raw("COUNT(agent) as count$name"), DB::raw("ROUND(AVG(data1),2) as data1$name"), DB::raw("ROUND(AVG(data2),2) as data2$name"), DB::raw("SUM(data3) as data3$name"))
+				->groupBy('date')
+				->whereIn('queuename', $request->queues)
+				->whereIn('event', $event);
+
+
+			/** get by date time */
+			if ($request->timeFilter || ($request->fromFilter && $request->toFilter)) {
+				$time = calcTime($request);
+				$calc = $calc->whereBetween('time', $time);
+			}
+			return $calc->get();
+		} catch (\Throwable $th) {
+			return null;
+		}
+	}
+	/**----- میانگین زمان انتظار در ساعت End --------------------*/
 }

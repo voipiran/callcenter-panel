@@ -77,6 +77,31 @@
             <div>{{ $t('AUTH.Users.Index.repeatPassword') }}</div>
             <input type="password" class="form-control" v-model="repeatPassword" @keyup.enter="submit()" />
           </div>
+
+          <!-- queue -->
+          <div class="col-12">
+            <div class="select-box my-2">
+              <!-- title -->
+              <div class="d-flex">
+                <div class="guide" v-if="$t('AUTH.Users.Edit.queue.queueGuide')">
+                  <p>{{ $t('AUTH.Users.Edit.queue.queueGuide') }}</p>
+                </div>
+                <h6 class="my-2">{{ $t('AUTH.Users.Edit.queue.queueTitle') }}</h6>
+              </div>
+              <!-- content -->
+              <div>
+                <input type="checkbox" class="m-2" v-model="allQueueStatus" />
+                <label for="">{{ $t('AUTH.Users.Edit.queue.checkboxAllQueue') }}</label>
+              </div>
+              <div class="d-block d-sm-flex justify-content-center w-100 p-2" v-if="!allQueueStatus">
+                <VueMultiselect v-model="queuesSelected" :options="allQueues" :placeholder="$t('AUTH.Users.Edit.queue.queueTitle')" :showLabels="false" :allow-empty="false" label="title" track-by="code" multiple="true">
+                  <template v-slot:noResult>
+                    {{ $t('GENERAL.noResult') }}
+                  </template>
+                </VueMultiselect>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- btn action and file pond-->
@@ -103,8 +128,6 @@ import helper from '../../js/helper'
 // multi select
 import VueMultiselect from 'vue-multiselect'
 
-
-
 export default {
   name: "users_edit",
   mixins: [helper],
@@ -127,6 +150,10 @@ export default {
 
       rolesOption: [],
       role: null,
+
+      queuesSelected: [],
+      allQueues: [],
+      allQueueStatus: true
 
     }
   },
@@ -160,6 +187,14 @@ export default {
           });
         }
 
+        // check permission queue
+        if (!this.allQueueStatus && !this.queuesSelected.length) {
+          return this.$notify({
+            text: this.$t('AUTH.Users.Edit.queue.errorQueueIsEmpty'),
+            type: 'warn'
+          });
+        }
+
         if (this.isLoadingSubmit) return
         this.isLoadingSubmit = true;
 
@@ -177,6 +212,7 @@ export default {
             tel: this.tel,
             internal_tel: this.internal_tel,
             email: this.email,
+            queues_available: this.allQueueStatus ? ["all"] : (this.queuesSelected ? this.queuesSelected.map((item) => item.code) : null)
           }
         })
 
@@ -185,7 +221,7 @@ export default {
           type: 'success'
         });
 
-        // this.$router.push({ name: 'users' });
+        this.$router.push({ name: 'users' });
 
       } catch (error) {
         console.log(error);
@@ -217,10 +253,22 @@ export default {
 
         let ls = this;
         this.rolesOption.map((item) => {
-
           if (item.id == req.data.data.role_id)
             ls.role = item;
         })
+
+        this.queuesSelected = [];
+        this.allQueues.map((item) => {
+          req.data.data.queues_available.map((avl) => {
+            if (avl == "all") {
+              ls.allQueueStatus = true;
+            }
+            if (item.code == avl) {
+              ls.queuesSelected.push(item);
+              ls.allQueueStatus = false;
+            }
+          });
+        });
 
       } catch (error) {
         console.log(error);
@@ -238,11 +286,18 @@ export default {
         })
         this.rolesOption = req.data.data;
 
+        // get queue data
+        let queue = [];
+        req.data.queue.map((item) => {
+          if (item.descr != 'NONE')
+            queue.push({ code: item.extension, title: `${item.descr} (${item.extension})` })
+        })
+        this.allQueues = queue
+
       } catch (error) {
         console.error(error);
       }
     },
-
   },
 
   components: {

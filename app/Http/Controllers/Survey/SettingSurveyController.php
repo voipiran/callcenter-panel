@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Survey;
 
+use App\Agent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Queues;
+use App\QueuesDetails;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use App\Helpers;
+use Illuminate\Support\Facades\Auth;
 
 class SettingSurveyController extends Controller
 {
@@ -39,12 +45,30 @@ class SettingSurveyController extends Controller
 			case 'remove':
 				$res = $this->remove($request);
 				break;
+			case 'get_queue_in_survey':
+				$res = $this->get_queue_in_survey($request);
+				break;
 			default:
 				$res = [
 					'status' => 500,
 					'message' => 'no command found'
 				];
 		}
+
+		// 3.	در هنگام "ساخت" و یا "ویرایش" و یا حذف یک نظر سنجی دستور زیر باید اجرا شود
+		try {
+			//shell_exec("amportal a r");
+			$command = 'su -c "amportal a r 2>&1"';
+			$output = array();
+			exec($command, $output, $return_var);
+		} catch (\Throwable $th) {
+			return [
+				'status' => 500,
+				'message' => 'faild',
+				'error' => $th->getMessage()
+			];
+		}
+
 		return response()->json($res, $res['status']);
 	}
 	/** getData for main page core survey (page browse) ... */
@@ -89,6 +113,7 @@ class SettingSurveyController extends Controller
 	public function submitUpdate($request)
 	{
 		try {
+
 			$data = [
 				'customer_voice_limit' => $request->customer_voice_limit,
 				'customer_voice_status' => $request->customer_voice_status,
@@ -112,6 +137,16 @@ class SettingSurveyController extends Controller
 
 				$survey->update($data);
 			} else {
+				// check  for add only one setting for any queue
+				$old = DB::connection('mysql8_Survey')->table('settings')->where('survey_queue', $request->queue)->count();
+				if ($old) {
+					return [
+						'status' => 500,
+						'message' => 'Duplicated setting for queue',
+						'error' => "برای هر صف فقط می توان یک تنظیمات ایجاد کرد"
+					];
+				}
+
 				// add action
 				$id = DB::connection('mysql8_Survey')->table('settings')->insertGetId($data);
 			}
@@ -183,7 +218,7 @@ class SettingSurveyController extends Controller
 
 			/** add to table queues_config db astrisk*/
 			$this->updateQueuesConfig('remove', $survey->survey_queue);
-			
+
 			$survey = DB::connection('mysql8_Survey')->table('settings')->where('id', $request->id)->delete();
 
 
@@ -249,5 +284,82 @@ class SettingSurveyController extends Controller
 		return response()->json([
 			'message' => 'File uploaded successfully',
 		]);
+	}
+
+	/** get data select-option from table Agent and ... */
+	public function get_queue_in_survey($request)
+	{
+		try {
+
+			// start get agent list
+			if ($request->showAllAgent) {
+				$agent = DB::connection('mysql')->table('queue_stats')
+					->select('agent as name', 'agent as extension')
+					->where('callid', 'MANAGER')
+					->groupBy('agent')->get();
+
+
+				/** get agent from table QueuesDetails */
+				$query = QueuesDetails::where('keyword', 'member')->groupBy('data')->get(['data']);
+				$agents = [];
+				foreach ($query as $item) {
+					$remove = str_replace('Local/', '', $item->data);
+					$remove = str_replace('@from-queue/n,0', '', $remove);
+					$agents[] = $remove;
+				}
+				$agent2 = Agent::whereIn('extension', $agents)->get(['name', 'extension']);
+
+				foreach ($agent2 as $newAgent) {
+					$dublicate = false;
+					foreach ($agent as $oldAgent) {
+						$dublicate = false;
+						if ($oldAgent->name == $newAgent->name)
+							$dublicate = true;
+					}
+					if ($dublicate == false)
+						array_push($agent, $newAgent);
+				}
+
+				/** merge agent table queue_stats and QueuesDetails */
+				// $obj_merged = (object) array_merge((array) $agent, (array) $agent2);
+				// $agent = $obj_merged;
+			} else {
+				$query = QueuesDetails::where('keyword', 'member')->groupBy('data')->get(['data']);
+				$agents = [];
+				foreach ($query as $item) {
+					$remove = str_replace('Local/', '', $item->data);
+					$remove = str_replace('@from-queue/n,0', '', $remove);
+					$agents[] = $remove;
+				}
+				$agent = Agent::whereIn('extension', $agents)->get(['name', 'extension']);
+			}
+
+			// Retrieve records from the 'Queues' table where 'extension' is in the array of 'survey_queue' values
+			$queuePermission = Auth::user()->queues_available;
+			if ($queuePermission[0] == "all") {
+				$q = [];
+				$queueDefineInSurveyString = DB::connection('mysql8_Survey')->table('settings')->get();
+				foreach ($queueDefineInSurveyString as $key => $value) {
+					$q[] = $value->survey_queue;
+				}
+				// Retrieve records from the 'Queues' table where 'extension' is in the array of 'survey_queue' values
+				$queue = Queues::whereIn('extension', $q)->get(['descr', 'extension']);
+			} else {
+				$queue = Queues::whereIn('extension', $queuePermission)->get(['descr', 'extension']);
+			}
+
+			return [
+				'status' => 200,
+				'message' => 'success',
+				'queue' => $queue,
+				'agent' => $agent
+			];
+		} catch (\Throwable $th) {
+			return [
+				'status' => 500,
+				'message' => 'faild',
+				'error' => $th->getMessage()
+			];
+		}
 	}
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<module> 
+  <menulist> 
+    <menuitem menuid="ccpanel" desc="Call Center Panel"
+parent="" module="no" link="" order="25"> 
+      <permissions> 
+        <group id="1" name="administrator" desc="total access"></group> 
+      </permissions> 
+    </menuitem> 
+
+	<menuitem menuid="panel" desc="Panel"
+parent="ccpanel" module="no" link="panel/" order="62"> 
+      <permissions> 
+        <group id="1" name="administrator" desc="total access"></group> 
+      </permissions> 
+    </menuitem> 
+	
+  </menulist> 
+</module>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\GroupPermision;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Licence;
@@ -83,7 +84,8 @@ class PermissionController extends Controller
     public function getAllPermission($request)
     {
         try {
-            $permissions = Permision::all();
+            $permissions = GroupPermision::with('permissions')->get();
+
             return [
                 'status' => 200, 'message' => 'success',
                 'data' => $permissions

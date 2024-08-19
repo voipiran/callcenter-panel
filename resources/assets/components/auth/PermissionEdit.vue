@@ -22,12 +22,14 @@
         </div>
 
         <!-- content -->
-        <div class="row">
-          <!-- permissions -->
-          <div class="col-12 col-md-4 mt-2" v-for="(item, index) in allPermission" :key="index">
+        <!-- permissions -->
+        <div class="row" v-for="(permissions, index) in allPermission" :key="index">
+          <hr style="border-bottom: 2px solid #f8f8f8; width: 100%; margin-top: 20px" />
+          <h6 class="col-12">{{ $t(`${permissions.name}`) }}</h6>
+          <div class="col-12 col-md-4 mt-2" v-for="(item, index) in permissions.permissions" :key="index">
             <div class="d-flex justify-content-start align-items-baseline">
               <input type="checkbox" v-model="item.selected" />
-              <label class="mx-2">{{ $t(`AUTH.Permission.ListPermission.${item.name}`) }}</label>
+              <label class="mx-2">{{ $t(`DB.permission.${item.name}`) }}</label>
             </div>
           </div>
         </div>
@@ -86,9 +88,15 @@ export default {
         if (this.isLoadingSubmit) return
         this.isLoadingSubmit = true;
 
-        let data = this.allPermission.filter((item) => {
-          return item.selected
-        })
+        let data = [];
+        this.allPermission.map((item) => {
+          item.permissions.map((permission) => {
+            if (permission.selected) {
+              data.push(permission);
+            }
+          })
+        });
+
         await this.$axios({
           url: '/permission/action',
           data: {
@@ -124,7 +132,10 @@ export default {
           }
         })
         this.allPermission = req.data.data.map((item) => {
-          item.selected = false;
+          item.permissions.map((permission) => {
+            permission.selected = false;
+            return permission;
+          })
           return item;
         });
 
@@ -149,9 +160,11 @@ export default {
         /** set current permission */
         let ls = this;
         req.data.data.permisions.map((currentPermission) => {
-          ls.allPermission.map((permissions, index) => {
-            if (permissions.name == currentPermission.name)
-              ls.allPermission[index].selected = true;
+          ls.allPermission.map((item, index) => {
+            item.permissions.map((permissions, indexChild) => {
+              if (permissions.name == currentPermission.name)
+                ls.allPermission[index].permissions[indexChild].selected = true;
+            })
           })
         })
 

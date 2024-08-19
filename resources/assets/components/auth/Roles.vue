@@ -29,12 +29,6 @@
             <button v-show="setPermission('auth.roles.add')" class="btn-submit" @click="addRole()">{{ $t('GENERAL.btnAdd') }}</button>
           </div>
 
-          <div class="export" v-if="!isLoadingExport && false">
-            <div class="pdf" @click="tableExport('rolesDetail', 'pdf')" :title="$t('GENERAL.pdfExport')"></div>
-            <div class="excel" @click="tableExport('rolesDetail', 'xls')" :title="$t('GENERAL.excelExport')"></div>
-            <div class="csv" @click="tableExport('rolesDetail', 'csv')" :title="$t('GENERAL.csvExport')"></div>
-          </div>
-
           <div class="loader-wait-request mx-2" style="width: 20px; height: 20px" v-if="isLoadingExport"></div>
         </div>
 
@@ -203,49 +197,6 @@ export default {
         console.error(error);
       }
       this.isLoading = false;
-
-    },
-
-    /** فعلا غیر فعال می باشد export action */
-    async exportRequest(type = 'pdf') {
-
-      if (this.isLoadingExport) return
-
-      this.isLoadingExport = true;
-
-      try {
-        let req = await this.$axios({
-          url: '/roles/action',
-          data: {
-            method: 'getData'
-          },
-        })
-
-        this.rowsExport = []
-        let ls = this;
-        await req.data.max_survey.map((queue) => {
-          req.data.data.map((item) => {
-            if (item.survey_location == queue.survey_queue) {
-              ls.rowsExport.push({
-                full_name: item.full_name,
-                average_survey: item.average_survey,
-                count_survey: item.count_survey,
-                date_time: item.date_time,
-                survey_location: item.survey_location,
-                total_survey: item.total_survey,
-                satisfaction_percentage: ((item.average_survey * 100) / 5).toFixed(0)
-              })
-            }
-          })
-        })
-
-
-        this.tableExport('rolesDetail', type);
-
-      } catch (error) {
-        console.error(error);
-      }
-      this.isLoadingExport = false;
 
     },
 

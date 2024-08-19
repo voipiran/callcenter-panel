@@ -55,12 +55,18 @@ class UnAnsweredController extends Controller
 			// دلیل قطع شدن مکالمه
 			$hangUp = $this->getHangUpState($request);
 
+			/** پراکندگی تماس ها در ساعت */
+			$waitByTime = $this->getWaitByTime($request);
+
 			return [
 				'status' => 200,
 				'message' => 'success',
 				'details' => $details,
 				'hangUp' => $hangUp,
-				'qUnAnswered' => $qUnAnswered
+				'qUnAnswered' => $qUnAnswered,
+				// 'waitByDate' => $waitByDate
+				'waitByDate' => [],
+				'waitByTime' => $waitByTime,
 
 			];
 		} catch (\Throwable $th) {
@@ -132,6 +138,83 @@ class UnAnsweredController extends Controller
 			return null;
 		}
 	}
+
+
+	/**-----پراکندگی تماس ها در ساعت Start --------------------*/
+	public function getWaitByTime($request)
+	{
+		try {
+			$answered = $this->CalculationWaitByTime($request, ['ABANDON', 'EXITWITHTIMEOUT', 'EXITWITHKEY', 'EXITEMPTY'], 'Answered');
+
+			return $answered;
+		} catch (\Throwable $th) {
+			return [];
+		}
+	}
+
+
+	public function CalculationWaitByTime($request, $event, $name, $where = false)
+	{
+		try {
+			$calc = DB::connection('mysql')->table('queue_stats')
+				->select(DB::raw('HOUR(time) as hour'), DB::raw("COUNT(agent) as count$name"), DB::raw("ROUND(AVG(data1),2) as data1$name"), DB::raw("ROUND(AVG(data2),2) as data2$name"), DB::raw("SUM(data3) as data3$name"))
+				->groupBy('hour')
+				->whereIn('queuename', $request->queues)
+				->whereIn('event', $event);
+
+
+			/** get by date time */
+			if ($request->timeFilter || ($request->fromFilter && $request->toFilter)) {
+				$time = calcTime($request);
+				$calc = $calc->whereBetween('time', $time);
+			}
+
+			return $calc->get();
+		} catch (\Throwable $th) {
+			return null;
+		}
+	}
+	/**-----پراکندگی تماس ها در ساعت End --------------------*/
+
+	/**----- میانگین زمان انتظار تماس های بدون پاسخ در ساعت  Start --------------------*/
+	public function getWaitByDate($request)
+	{
+		try {
+			$answered = $this->CalculationWaitByDate($request, ['COMPLETEAGENT', 'COMPLETECALLER'], 'Answered');
+			$Unanswered = $this->CalculationWaitByDate($request, ['ABANDON', 'EXITWITHTIMEOUT', 'EXITWITHKEY', 'EXITEMPTY'], 'Unanswered');
+			$logout = $this->CalculationWaitByDate($request,  ['REMOVEMEMBER'], 'Logout', ['callid', 'MANAGER']);
+			$login = $this->CalculationWaitByDate($request,  ['ADDMEMBER'], 'Login', ['callid', 'MANAGER']);
+			return [
+				'answered' => $answered,
+				'Unanswered' => $Unanswered,
+				'logout' => $logout,
+				'login' => $login,
+			];
+		} catch (\Throwable $th) {
+			return [];
+		}
+	}
+	public function CalculationWaitByDate($request, $event, $name, $where = false)
+	{
+		try {
+			$calc = DB::connection('mysql')->table('queue_stats')
+				->select(DB::raw('DATE(time) as date'), DB::raw("COUNT(agent) as count$name"), DB::raw("ROUND(AVG(data1),2) as data1$name"), DB::raw("ROUND(AVG(data2),2) as data2$name"), DB::raw("SUM(data3) as data3$name"))
+				->groupBy('date')
+				->whereIn('queuename', $request->queues)
+				->whereIn('event', $event);
+
+
+			/** get by date time */
+			if ($request->timeFilter || ($request->fromFilter && $request->toFilter)) {
+				$time = calcTime($request);
+				$calc = $calc->whereBetween('time', $time);
+			}
+			return $calc->get();
+		} catch (\Throwable $th) {
+			return null;
+		}
+	}
+	/**----- میانگین زمان انتظار تماس های بدون پاسخ در ساعت  End --------------------*/
 
 
 	// <!-- تماس های بدون پاسخ در صف -->

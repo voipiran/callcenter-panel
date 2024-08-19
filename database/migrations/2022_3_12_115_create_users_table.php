@@ -12,23 +12,24 @@ class CreateUsersTable extends Migration
         Schema::connection('mysql3')->create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('full_name');
-            
+
             $table->integer('role_id')->unsigned();
             $table->index('role_id'); // create index on role_id column
             $table->foreign('role_id')->references('id')->on('roles')->onDelete("cascade");
 
-            $table->string('mobile');
-            $table->string('internal_tel');
-            $table->string('tel');
-            $table->string('email');
-            
-            $table->string('user_name');
-            $table->string('password');
-            
+            $table->string('mobile')->nullable();
+            $table->string('internal_tel')->nullable();
+            $table->string('tel')->nullable();
+            $table->string('email')->nullable();
+
+            $table->string('user_name')->nullable();
+            $table->string('password')->nullable();
+
+            $table->string('queues_available')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });
-
     }
 
     public function down()

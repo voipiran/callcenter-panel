@@ -9,6 +9,8 @@ use App\Survey;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Helpers;
+use Illuminate\Support\Facades\Auth;
 
 class CoreSurveyController extends Controller
 {
@@ -72,9 +74,33 @@ class CoreSurveyController extends Controller
 	public function getData($request)
 	{
 		try {
-			$data = Survey::orderBy('id','desc')->get();
+			/** set user according target page
+			 * if target == dashboard -> return all user else return one user
+			 */
+			$users = $request->users;
+			if (!$users) {
+				$users = getUserList($request);
+			}
+
+			/** set queue according role
+			 * if role == admin -> return all queue else return one queue
+			 */
+			$queues = $request->queues;
+			if (!$queues) {
+				$queues = getUserQueuesParsed($request);
+			}
+
+
+			$data = Survey::orderBy('id', 'desc')->whereIn('agent_number', $users)
+				->whereIn('survey_location', $queues);
+
+			// filter by years
+			if ($request->date) {
+				$data->where('date_time', 'LIKE', "%$request->date%");
+			}
+
 			$fillerData = [];
-			foreach ($data as $item) {
+			foreach ($data->get() as $item) {
 				$item->customer_message = $this->getCustomerVoice($item->uniqueid);
 				$fillerData[] = $item;
 				# code...
@@ -224,7 +250,12 @@ class CoreSurveyController extends Controller
 	public function getQueueOption()
 	{
 		try {
-			$queue = Queues::get(['descr', 'extension']);
+			$queuePermission = Auth::user()->queues_available;
+			if ($queuePermission[0] == "all") {
+				$queue = Queues::get(['descr', 'extension']);
+			} else {
+				$queue = Queues::whereIn('extension', $queuePermission)->get(['descr', 'extension']);
+			}
 			return [
 				'status' => 200,
 				'message' => 'success',
@@ -242,20 +273,20 @@ class CoreSurveyController extends Controller
 	/** get voice file name  */
 	public	function getCustomerVoice($uniqueId)
 	{
-		
+
 		$data = DB::connection('mysql4')->table('cdr')->where('uniqueid', $uniqueId)->where('recordingfile', '!=', '')->get();
 		if (!count($data)) {
 			return null;
 		}
 		// return $data;
 		$data = $data[0]->recordingfile;
-	
+
 		$explode = explode('-', $data);
 		$m = date('m', strtotime($explode[3]));
 		$d = date('d', strtotime($explode[3]));
 		$y = date('Y', strtotime($explode[3]));
 		$file =  'customerVoices/' . $y . '/' . $m . '/' . $d . '/' . $data;
-	
+
 		return $file;
 	}
 }

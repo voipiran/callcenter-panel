@@ -29,20 +29,16 @@
           </h5>
           <ul>
             <li>
-              <span>{{ $t('GENERAL.report.queue') }}</span
-              ><span>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.queue') }} : </span><b>{{ home.queues ? showLable(home.queues) : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span>{{ $t('GENERAL.report.fromFilter') }}</span
-              ><span>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span>{{ $t('GENERAL.report.fromFilter') }} : </span><b>{{ home.fromFilterFaLable ? home.fromFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.toFilter') }}</span
-              ><span>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.toFilter') }} : </span><b>{{ home.toFilterFaLable ? home.toFilterFaLable : $t('GENERAL.empty') }}</b>
             </li>
             <li>
-              <span> {{ $t('GENERAL.report.range') }}</span
-              ><span>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</span>
+              <span> {{ $t('GENERAL.report.range') }} : </span><b>{{ home.timeFilter ? $t(`STATS.HOME.${home.timeFilter.code}`) : $t('GENERAL.empty') }}</b>
             </li>
           </ul>
         </div>
@@ -51,21 +47,17 @@
           <h5>{{ $t('STATS.ANS.detail.title') }}</h5>
           <ul>
             <li>
-              <span>{{ $t('STATS.ANS.detail.answered') }}</span
-              ><span>{{ answered.details[0].count ? answered.details[0].count : '' }} {{ $t('GENERAL.call') }}</span>
+              <span>{{ $t('STATS.ANS.detail.answered') }} : </span><b>{{ answered.details[0].count ? answered.details[0].count : '' }} {{ $t('GENERAL.call') }}</b>
             </li>
             <!-- <li><span>تماس های انتقال داده شده :</span><span></span></li> -->
             <li>
-              <span> {{ $t('STATS.ANS.detail.avgTime') }}</span
-              ><span v-html="answered.details[0].time ? secondsToDay(answered.details[0].time / answered.details[0].count) : ''"></span>
+              <span> {{ $t('STATS.ANS.detail.avgTime') }} : </span><b v-html="answered.details[0].time ? secondsToDay(answered.details[0].time / answered.details[0].count) : ''"></b>
             </li>
             <li>
-              <span> {{ $t('STATS.ANS.detail.time') }}</span
-              ><span v-html="answered.details[0].time ? secondsToDay(answered.details[0].time) : ''"> </span>
+              <span> {{ $t('STATS.ANS.detail.time') }} : </span><b v-html="answered.details[0].time ? secondsToDay(answered.details[0].time) : ''"> </b>
             </li>
             <li>
-              <span> {{ $t('STATS.ANS.detail.avgDelay') }}</span
-              ><span v-html="answered.details[0].delay ? secondsToDay(answered.details[0].delay / answered.details[0].count) : ''"> </span>
+              <span> {{ $t('STATS.ANS.detail.avgDelay') }} : </span><b v-html="answered.details[0].delay ? secondsToDay(answered.details[0].delay / answered.details[0].count) : ''"> </b>
             </li>
           </ul>
         </div>
@@ -265,6 +257,86 @@
         </div>
       </div>
 
+      <!-- میانگین زمان انتظار در ساعت-->
+      <div class="table-shadow row" v-if="answered.waitByDate" id="waitByDate">
+        <!-- title -->
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <div class="d-flex">
+            <div class="guide" v-if="$t('STATS.DIS.wait.GUIDE')">
+              <p>{{ $t('STATS.DIS.wait.GUIDE') }}</p>
+            </div>
+            <h5 class="m-0">{{ $t('STATS.DIS.wait.title') }}</h5>
+          </div>
+          <div class="export">
+            <div class="pdf" @click="tableExport('DIS_waitByDate', 'pdf')" :title="$t('GENERAL.pdfExport')"></div>
+            <div class="excel" @click="tableExport('DIS_waitByDate', 'xls')" :title="$t('GENERAL.excelExport')"></div>
+            <div class="csv" @click="tableExport('DIS_waitByDate', 'csv')" :title="$t('GENERAL.csvExport')"></div>
+          </div>
+        </div>
+
+        <!--vue good table -->
+        <div class="w-100" dir="ltr">
+          <vue-good-table :columns="columnsWaitByDate" :rows="answered.waitByDate" :search-options="optionsTable">
+            <!-- customize fields  -->
+            <template #table-row="props">
+              <span v-if="props.column.field == 'date'">
+                <span v-if="$i18n.locale == 'en'" dir="rtl">{{ jdate(props.row.date, 'YYYY/MM/DD') }}</span>
+                <span v-else dir="rtl">{{ jdate(props.row.date, 'jYYYY/jMM/jDD') }}</span>
+              </span>
+              <span v-else-if="props.column.field == 'pAnswered'">
+                <span dir="rtl">{{ props.row.countAnswered ? ((props.row.countAnswered * 100) / (props.row.countAnswered * 1 + (props.row.countUnanswered ? props.row.countUnanswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</span>
+              </span>
+              <span v-else-if="props.column.field == 'pUnAnswered'">
+                <span dir="rtl">{{ props.row.countUnanswered ? ((props.row.countUnanswered * 100) / (props.row.countUnanswered * 1 + (props.row.countAnswered ? props.row.countAnswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</span>
+              </span>
+              <span v-else-if="props.column.field == 'countUnanswered'">
+                <span>{{ props.row.countUnanswered ? props.row.countUnanswered : 0 }}</span>
+              </span>
+              <span v-else-if="props.column.field == 'data2Answered'">
+                <span dir="rtl">{{ props.row.data2Answered ? secondsToDay(props.row.data2Answered, false, 'table') : 0 }}</span>
+              </span>
+              <span v-else-if="props.column.field == 'data1Answered'">
+                <span dir="rtl">{{ props.row.data1Answered ? secondsToDay(props.row.data1Answered, false, 'table') : 0 }}</span>
+              </span>
+              <span v-else>
+                {{ props.formattedRow[props.column.field] }}
+              </span>
+            </template>
+          </vue-good-table>
+        </div>
+
+        <!-- the page content for export -->
+        <table class="mt-3" id="DIS_waitByDate" v-show="false">
+          <thead>
+            <tr>
+              <th>{{ $t('STATS.DIS.wait.data') }}</th>
+              <th>{{ $t('STATS.DIS.wait.answered') }}</th>
+              <th>{{ $t('STATS.DIS.wait.pAnswered') }}</th>
+              <th>{{ $t('STATS.DIS.wait.unAnswered') }}</th>
+              <th>{{ $t('STATS.DIS.wait.pUnAnswered') }}</th>
+              <th>{{ $t('STATS.DIS.wait.avgTime') }}</th>
+              <th>{{ $t('STATS.DIS.wait.avgWait') }}</th>
+              <th>{{ $t('STATS.DIS.wait.login') }}</th>
+              <th>{{ $t('STATS.DIS.wait.logout') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(td, indexTd) in answered.waitByDate" :key="indexTd">
+              <td v-if="$i18n.locale == 'en'">{{ td.date ? jdate(td.date, 'YYYY/MM/DD') : 0 }}</td>
+              <td v-else>{{ td.date ? jdate(td.date, 'jYYYY/jMM/jDD') : 0 }}</td>
+              <td>{{ td.countAnswered ? td.countAnswered : 0 }}</td>
+              <td>{{ td.countAnswered ? ((td.countAnswered * 100) / (td.countAnswered * 1 + (td.countUnanswered ? td.countUnanswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</td>
+              <td>{{ td.countUnanswered ? td.countUnanswered : 0 }}</td>
+              <td>{{ td.countUnanswered ? ((td.countUnanswered * 100) / (td.countUnanswered * 1 + (td.countAnswered ? td.countAnswered * 1 : 0))).toFixed(2) : 0 }} {{ $t('GENERAL.percentage') }}</td>
+              <td>{{ td.data2Answered ? secondsToDay(td.data2Answered, false, 'table') : 0 }}</td>
+              <td>{{ td.data1Answered ? secondsToDay(td.data1Answered, false, 'table') : 0 }}</td>
+              <td>{{ td.countLogin ? td.countLogin : 0 }}</td>
+              <td>{{ td.countLogout ? td.countLogout : 0 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <!-- تماس های پاسخ داده شده بر اساس مدت مکالمه -->
       <div class="table-shadow row" v-if="answered.answeredByCallLength" id="answeredByCallLength">
         <!-- title -->
@@ -353,6 +425,21 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!--  نمودار میانگین زمان انتظار در ساعت -->
+      <div class="table-shadow row" v-if="answered.chartDelayAnswered" id="chartDelayAnswered">
+        <div class="col-12">
+          <!-- title -->
+          <div class="d-flex">
+            <div class="guide" v-if="$t('STATS.DIS.chartDelayAnswered.GUIDE')">
+              <p>{{ $t('STATS.DIS.chartDelayAnswered.GUIDE') }}</p>
+            </div>
+            <h5 class="m-0">{{ $t('STATS.DIS.chartDelayAnswered.title') }}</h5>
+          </div>
+          <!-- chart -->
+          <barChart :data="answered.chartDelayAnswered" :convertTime="true" :customLabel="'Chart.avg'"></barChart>
+        </div>
       </div>
 
       <!-- جزئیات تماس های پاسخ داده شده -->
@@ -468,8 +555,7 @@ import { useAnswered } from '../../js/pinia/answered'
 
 // helper
 import helper from '../../js/helper'
-
-var moment = require('moment-jalaali')
+import pdfExport from '../../js/pdfExport'
 
 // import chart
 import barChart from '../chart/BarChart.vue'
@@ -480,7 +566,7 @@ import { VueGoodTable } from 'vue-good-table-next';
 
 export default {
   name: 'answered',
-  mixins: [helper],
+  mixins: [helper, pdfExport],
   data() {
     return {
       isLoading: false,
@@ -786,6 +872,97 @@ export default {
           },
         },
       ],
+
+      columnsWaitByDate: [
+        {
+          label: this.$t('STATS.UN_ANS.wait.logout'),
+          field: 'countLogout',
+          type: 'number',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+
+        },
+        {
+          label: this.$t('STATS.UN_ANS.wait.login'),
+          field: 'countLogin',
+          type: 'number',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+
+        },
+        {
+          label: this.$t('STATS.UN_ANS.wait.avgWait'),
+          field: 'data1Answered',
+          type: 'number',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('STATS.UN_ANS.wait.avgTime'),
+          field: 'data2Answered',
+          type: 'number',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('STATS.UN_ANS.wait.pUnAnswered'),
+          field: 'pUnAnswered',
+          sortable: false,
+
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+
+        {
+          label: this.$t('STATS.UN_ANS.wait.unAnswered'),
+          field: 'countUnanswered',
+          type: 'number',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+
+        {
+          label: this.$t('STATS.UN_ANS.wait.pAnswered'),
+          field: 'pAnswered',
+          sortable: false,
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('STATS.UN_ANS.wait.answered'),
+          field: 'countAnswered',
+          type: 'number',
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+        },
+        {
+          label: this.$t('STATS.UN_ANS.wait.data'),
+          field: 'date',
+          sortable: false,
+          filterOptions: {
+            enabled: true, // enable filter for this column
+            trigger: 'enter', //only trigger on enter not on keyup 
+          },
+
+        },
+      ],
+
     }
   },
   methods: {
@@ -816,7 +993,6 @@ export default {
             }
           return item
         });
-        console.log('update: ', update);
         this.answered.answeredCallsDetail = update
       } catch (error) {
         console.log(error);
@@ -852,8 +1028,8 @@ export default {
           'queues': queues,
           'agents': agents,
           'timeFilter': this.home.timeFilter,
-          'toFilter': this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
-          'fromFilter': this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
+          'toFilter': this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
+          'fromFilter': this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
         }
         let req = await this.$axios({
           url: '/stats/answeredActions',
@@ -899,6 +1075,42 @@ export default {
         // this.home.toFilterFaLable = this.jdate(req.data.timeFilter[1], 'jYYYY/jMM/jDD')
         // /**end save req for show in page answered */
 
+        /** merge data feild waitByDate*/
+        let objWaitByDate = req.data.waitByDate
+        let mergedByDate = this.merge(objWaitByDate.answered, objWaitByDate.Unanswered, 'date');
+        mergedByDate = this.merge(objWaitByDate.answered, objWaitByDate.login, 'date');
+        mergedByDate = this.merge(objWaitByDate.answered, objWaitByDate.logout, 'date');
+        this.answered.waitByDate = mergedByDate
+
+
+
+        // <!--  نمودار میانگین زمان انتظار در ساعت -->
+        let addAllHours = [];
+        for (const hour of Array.from(Array(24).keys())) {
+          let duplicate = false;
+          req.data.waitByTime.map((item) => {
+            if (item.hour == hour)
+              duplicate = item;
+          })
+
+          if (!duplicate)
+            addAllHours.push({
+              data1Answered: 0,
+              hour: hour.toString(),
+            })
+          else
+            addAllHours.push(duplicate)
+        }
+
+        let chartDelayAnswered = addAllHours.map((item) => {
+          return {
+            'lable': item.hour,
+            [this.$t('STATS.DIS.chartDelayAnswered.avgDelay')]: parseFloat(item.data1Answered)
+
+          }
+        })
+
+        this.answered.chartDelayAnswered = chartDelayAnswered
 
 
       } catch (error) {
@@ -942,8 +1154,8 @@ export default {
           'queues': queues,
           'agents': agents,
           'timeFilter': this.home.timeFilter,
-          'toFilter': this.home.toFilter ? moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
-          'fromFilter': this.home.fromFilter ? moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm').format('YYYY-MM-DD HH:mm') : null,
+          'toFilter': this.home.toFilter ? this.moment(this.home.toFilter + ' ' + this.home.toTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
+          'fromFilter': this.home.fromFilter ? this.moment(this.home.fromFilter + ' ' + this.home.fromTime, 'jYYYY/jM/jD HH:mm', 'YYYY-MM-DD HH:mm') : null,
           'export': exportRequest
 
         }

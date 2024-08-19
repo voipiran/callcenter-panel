@@ -29,12 +29,6 @@
             <button v-show="setPermission('licence.add')" class="btn-submit" @click="addLicence()">{{ $t('GENERAL.btnAdd') }}</button>
           </div>
 
-          <div class="export" v-if="!isLoadingExport && false">
-            <div class="pdf" @click="tableExport('licenceDetail', 'pdf')" :title="$t('GENERAL.pdfExport')"></div>
-            <div class="excel" @click="tableExport('licenceDetail', 'xls')" :title="$t('GENERAL.excelExport')"></div>
-            <div class="csv" @click="tableExport('licenceDetail', 'csv')" :title="$t('GENERAL.csvExport')"></div>
-          </div>
-
           <div class="loader-wait-request mx-2" style="width: 20px; height: 20px" v-if="isLoadingExport"></div>
         </div>
 
@@ -72,10 +66,6 @@ import helper from '../../js/helper'
 
 // import vue good table
 import { VueGoodTable } from 'vue-good-table-next';
-
-/** use for search date in vue-good-table */
-var moment = require('moment-jalaali')
-
 
 export default {
   name: 'licence',
@@ -123,7 +113,7 @@ export default {
             trigger: 'enter', //only trigger on enter not on keyup 
             filterFn: function (currentDate, filterDate) {
               console.log('currentDate, filterDate :', currentDate, filterDate);
-              return moment(filterDate, 'jYYYY/jMM/jDD').format('YYYY-MM-DD') == moment(currentDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD') || moment(filterDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD') == moment(currentDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
+              return this.moment(filterDate, 'jYYYY/jMM/jDD','YYYY-MM-DD') == this.moment(currentDate, 'YYYY-MM-DD HH:mm:ss','YYYY-MM-DD') || this.moment(filterDate, 'YYYY-MM-DD HH:mm:ss','YYYY-MM-DD') == this.moment(currentDate, 'YYYY-MM-DD HH:mm:ss','YYYY-MM-DD');
             }
           },
           sortable: false

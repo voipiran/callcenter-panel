@@ -16,45 +16,69 @@ body {
 
   /* btns */
   /* del */
-  --btn_danger: #f22877;
+  --btn_danger: #ff4d4f;
 
   /* edit */
-  --btn_primary: #4a7ef3;
+  --btn_primary: #1890ff;
 
   /* add, save, submit */
-  --btn_submit: #f28c44;
+  --btn_submit: #52c41a;
 
   &.dark {
     /* dark */
-    --body: #1d2041;
-    --box: #2c335e;
-    --thead: #121228;
-    --bg_light: #353d6d;
-    --odd_trow: #1e2341;
-    --even_trow: #15192f;
-    --text_light: #fff;
-    --text_gray: #9eabcd;
-    --text_murky: #6a7198;
-    --input: #676e976e;
+    --body: #181818;
+    --box: #282828;
+    --thead: #3c3c3c;
+    --bg_light: #303030;
+    --odd_trow: #2a2a2a;
+    --even_trow: #242424;
+    --text_light: #e0e0e0;
+    --text_gray: #b0b0b0;
+    --text_murky: #8a8a8a;
+    --input: #404040;
 
     /* btns */
     /* del */
-    --btn_danger: #f22877;
+    --btn_danger: #ff4d4f;
 
     /* edit */
-    --btn_primary: #4a7ef3;
+    --btn_primary: #1890ff;
 
     /* add, save, submit */
-    --btn_submit: #f28c44;
+    --btn_submit: #52c41a;
   }
 }
 
 /** ---------------- start css for all component -----------------------*/
 .table-shadow {
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px !important;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 8px !important;
   margin-top: 10px !important;
   padding: 20px;
   overflow: auto;
-  border-radius: 7px;
+  border-radius: 8px;
   background-color: var(--box);
 }
+
+
+
+/* responsive adjustments */
+@media (max-width: 768px) {
+  .modal {
+    width: 90%;
+    padding: 10px;
+  }
+
+  .button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .card {
+    margin: 8px 0;
+  }
+
+  .form-control {
+    padding: 6px 10px;
+  }
+}
+

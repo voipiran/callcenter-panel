@@ -168,6 +168,9 @@ export default {
         btnAdd: 'Add',
         btnCancel: 'Cancle',
         btnOperation: 'Operation',
+        btnFilter: 'Search Settings',
+
+
         CHOOSE_FILE: "Choose file",
         CHOOSE_MULTISELECT: "Choose multiselect",
 
@@ -281,6 +284,9 @@ export default {
             last1Month: "Last one month",
             last3Month: "Last three month",
             last1Years: 'Last one years',
+
+            currentYears: 'Current Years',
+            lastYears: '  Last Years',
             /** time  */
             fromTime: "From time",
             toTime: "To time",
@@ -440,6 +446,21 @@ export default {
                 event: 'Event',
                 EndPosition: 'Exit position',
                 StartPosition: 'Position on arrival',
+            },
+            // waiting time
+            wait: {
+                GUIDE: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt excepturi magni quasi quibusdam earum praesentium voluptatum',
+                title: 'Average waiting time for unanswered calls per hour',
+                data: 'Date',
+                answered: 'Answered',
+                pAnswered: 'Percentage of responses',
+                unAnswered: "No Answer",
+                pUnAnswered: 'Precentage of unanswered',
+                avgTime: 'Average conversation duration',
+                avgWait: 'Average waiting time',
+                login: 'Login',
+                logout: 'Logout',
+
             },
 
         },
@@ -741,6 +762,10 @@ export default {
         Dashboard: {
             GUIDE: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt excepturi magni quasi quibusdam earum praesentium voluptatum',
             title: 'Dashboard',
+            best_agent: {
+                GUIDE: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt excepturi magni quasi quibusdam earum praesentium voluptatum',
+                title: 'Best Operator',
+            },
         },
         OperatorChart: {
             GUIDE: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt excepturi magni quasi quibusdam earum praesentium voluptatum',
@@ -791,6 +816,12 @@ export default {
             caller_number: 'Caller number',
             caller_name: 'Name of the caller',
             survey_value: 'Survey amount',
+
+            survey_route: 'Survey location',
+            inbound: 'incoming call',
+            outbound: 'outgoing call',
+            directExtension: 'direct Extension',
+
             customer_voice_path: 'Conversational voice',
             customer_message: 'Customer message',
 
@@ -979,6 +1010,33 @@ export default {
             title: "Title",
             titleAdd: "Title add",
             license: "License",
+        }
+    },
+
+    /** chart lable and etc */
+    Chart: {
+        of: "از",
+        survey: "نظر",
+    },
+
+    /** modal setting in survey */
+    Modal: {
+        Setting: {
+
+            /** راهنما صف */
+            queueTitle: ' انتخاب صف',
+            queueGuide: 'صف های مورد نظر خود را برای اعمال گزارشات انتخاب کنید.',
+            /** راهنمای کارشناس */
+            agentTitle: '  انتخاب کارشناس ',
+            agentGuide: 'به صورت پیش فرض فقط کارشناس های تعریف شده در صف ها نمایش داده می شود، در صورت انتخاب گزینه نمایش همه، کارشناس های گذشته که در اکنون در صف نیستند نیز برای انتخاب نمایش داده می شوند.',
+
+            /** تاریخ */
+            timeGuide: 'انتخاب سال ....',
+            time: ' تاریخ ',
+
+            // دکمه نمایش گزارش 
+            btnSubmit: ' نمایش گزارش '
+
         }
     }
 }

@@ -13,6 +13,7 @@ class CreatePermisionsTable extends Migration
 			$table->increments('id');
             $table->string('name');
             $table->string('label');
+            $table->unsignedBigInteger('group_id'); 
             $table->timestamps();
         });
     }
