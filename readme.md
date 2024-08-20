@@ -23,5 +23,6 @@ sudo chmod -R 755 /var/www/panel
 
 ### Step 5: Run the install.sh script
 ```
-sudo /var/www/panel/install.sh
+cd /var/www/panel
+./install.sh
 ```
