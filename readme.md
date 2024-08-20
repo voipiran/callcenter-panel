@@ -12,7 +12,7 @@ unzip callcenter-panel.zip
 ### Step 3: Move the files to /var/www/panel
 ```
 sudo mkdir -p /var/www/panel
-sudo mv callcenter-panel-main/* /var/www/panel
+sudo mv callcenter-panel-main/* callcenter-panel-main/.* /var/www/panel
 ```
 
 ### Step 4: Set the necessary permissions
