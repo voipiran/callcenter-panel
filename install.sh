@@ -178,16 +178,17 @@ echo '<Directory "/var/www/html/panel">' >> /etc/httpd/conf.d/issabel-htaccess.c
 echo 'AllowOverride All' >> /etc/httpd/conf.d/issabel-htaccess.conf
 echo '</Directory>' >> /etc/httpd/conf.d/issabel-htaccess.conf
 
-yarn
 
-####Cooment for Devlopment
-yes | cp -rf /var/www/panel/installation/js/chunks/*  /var/www/panel/installation/js/chunks
-yes | cp -arf /var/www/panel/installation/js/css  /var/www/panel/installation/js
-yes | cp -rf /var/www/panel/installation/js/login.js /var/www/panel/installation/js
-yes | cp -rf /var/www/panel/installation/js/main.js /var/www/panel/installation/js
+
+####Comment for Devlopment
+yes | cp -rf /var/www/panel/installation/js/chunks/*  /var/www/html/panel/js/chunks &> /dev/null
+yes | cp -rf /var/www/panel/installation/js/css/*  /var/www/html/panel/css &> /dev/null
+yes | cp -rf /var/www/panel/installation/js/login.js /var/www/html/panel/js &> /dev/null
+yes | cp -rf /var/www/panel/installation/js/main.js /var/www/html/panel/js
 
 
 ####Uncomment for Devlopment
+#yarn
 #yarn watch
 
 
