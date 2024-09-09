@@ -168,6 +168,9 @@ cd /var/www/panel
 yes | cp -rf installSH /var/www/html/panel
 chmod -R 777 /var/www/html/panel/installSH
 
+#For Stats SH
+chmod 666 /etc/odbc.ini
+
 ####
 cd /var/www/panel
 php artisan cache:clear
