@@ -100,7 +100,7 @@ echo "SourceGuardian Files have Moved Sucsessfully"
 systemctl reload php-fpm  > /dev/null
 
 ####Add from-internal-custom
-# File to check
+# File to check, There is no from-internal-custom on Issabel5
 FILE="/etc/asterisk/extensions_custom.conf"
 
 # Line to search for
@@ -201,6 +201,7 @@ yes | cp -rf /var/www/panel/installation/js/main.js /var/www/html/panel/js
 chmod -R 777 /var/www/panel/app/Http/Controllers/Licence
 chmod -R 777 /var/www/panel/installSH
 
+
 #NumberFormater
 echo "" >> /etc/asterisk/extensions_custom.conf
 echo ";;VOIPIRAN.io" >> /etc/asterisk/extensions_custom.conf
@@ -209,16 +210,16 @@ yes | cp -rf $filesPath/irouting/extensions_voipiran_numberformatter.conf /etc/a
 chown -R asterisk:asterisk /etc/asterisk/extensions_voipiran_numberformatter.conf
 chmod 777 /etc/asterisk/extensions_voipiran_numberformatter.conf
 
+
 ### Add from-pstn Context
 echo "" >> /etc/asterisk/extensions_custom.conf
 echo ";;VOIPIRAN.io" >> /etc/asterisk/extensions_custom.conf
-echo "[from-pstn-custom]" >> /etc/asterisk/extensions_custom.conf
+echo "[to-ccpanel]" >> /etc/asterisk/extensions_custom.conf
 echo "exten => _.,1,Set(IS_PSTN_CALL=1)" >> /etc/asterisk/extensions_custom.conf
 echo "exten => _.,n,NoOp(start-from-pstn)" >> /etc/asterisk/extensions_custom.conf
 echo "exten => _.,n,Gosub(numberformatter,s,1)" >> /etc/asterisk/extensions_custom.conf
 echo "exten => _.,n,NoOp(end-from-pstn)" >> /etc/asterisk/extensions_custom.conf
-echo "exten => _.,n,Goto(ext-did,s,1)" >> /etc/asterisk/extensions_custom.conf
-
+echo "exten => _.,n,Goto(from-pstn,s,1)" >> /etc/asterisk/extensions_custom.conf
 
 
 echo "" >> /etc/asterisk/extensions_custom.conf
