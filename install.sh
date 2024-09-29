@@ -229,6 +229,10 @@ echo "exten => s,1,NoOp(hangup-events)" >> /etc/asterisk/extensions_custom.conf
 echo "exten => s,n,Hangup()" >> /etc/asterisk/extensions_custom.conf
 
 
+###To set permission running amporal
+#echo "asterisk ALL=(ALL) NOPASSWD: /var/www/html/admin/modules/framework/amp_conf/sbin/amportal" | sudo tee -a /etc/sudoers
+
+
 ### Restart Services
 systemctl reload asterisk
 systemctl reload httpd

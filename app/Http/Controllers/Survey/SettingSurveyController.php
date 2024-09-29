@@ -57,10 +57,8 @@ class SettingSurveyController extends Controller
 
 		// 3.	در هنگام "ساخت" و یا "ویرایش" و یا حذف یک نظر سنجی دستور زیر باید اجرا شود
 		try {
-			//shell_exec("amportal a r");
-			$command = 'su -c "amportal a r 2>&1"';
-			$output = array();
-			exec($command, $output, $return_var);
+			$command = "sudo /var/www/html/admin/modules/framework/amp_conf/sbin/amportal a r";
+			$output = shell_exec($command);
 		} catch (\Throwable $th) {
 			return [
 				'status' => 500,
