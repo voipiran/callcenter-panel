@@ -62,5 +62,6 @@ sed -i '/\[settings\]/a queue\_log \=\> odbc\,voipiran\_stats\,queue\_stats' /et
 ### Remove Folder
 
 ### Restart Services
-systemctl reload asterisk
+#systemctl reload asterisk
+asterisk -rx "reload"
 

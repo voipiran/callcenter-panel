@@ -87,5 +87,6 @@ echo "QAGI=viplayagentinfo.php" >> /etc/asterisk/globals_custom.conf
 ### Remove Folder
 
 ### Restart Services
-systemctl reload asterisk
+#systemctl reload asterisk
+asterisk -rx "reload"
 systemctl restart httpd
