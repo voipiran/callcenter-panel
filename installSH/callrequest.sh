@@ -3,7 +3,7 @@
 echo "Install VOIPIRAN CallRequest"
 echo "VOIPIRAN.io"
 sleep 1
-
+cd /var/www/panel
 
 #############################Initial
 

@@ -1,13 +1,14 @@
 Sample Without CallerID
-https://ISSABEL_IP/dialer/dial.php?dir=inout&in=2001&out1=09122103200
-https://ISSABEL_IP/dialer/dial.php?dir=outin&in=2001&out1=09122103200
+https://ISSABEL_IP/dialer/dial.php?dir=inout&in1=2001&out1=09122103200
+https://ISSABEL_IP/dialer/dial.php?dir=outin&in1=2001&out1=09122103200
 https://ISSABEL_IP/dialer/dial.php?dir=outout&out2=09122105050&out1=09122103200
+https://ISSABEL_IP/dialer/dial.php?dir=inin&in1=2001&in2=2002
 
 Sample inout With CallerID Number
-https://ISSABEL_IP/dialer/dial.php?dir=inout&in=2001&out1=09122103200&cid=09122103200
+https://ISSABEL_IP/dialer/dial.php?dir=inout&in1=2001&out1=09122103200&cid=09122103200
 
 Sample inout With CallerID Number and Name
-https://ISSABEL_IP/dialer/dial.php?dir=inout&in=2001&out1=09122103200&cid=hamed<09122103200>
+https://ISSABEL_IP/dialer/dial.php?dir=inout&in1=2001&out1=09122103200&cid=hamed<09122103200>
 
 Sample outout With CallerID Number
 https://ISSABEL_IP/dialer/dial.php?dir=outout&out2=09122105050&out1=09122103200&cid=43398000
@@ -15,7 +16,8 @@ https://ISSABEL_IP/dialer/dial.php?dir=outout&out2=09122105050&out1=09122103200&
 
 dir=inout,outin,outout
 out1= Shahri aval
-in= Shomare Karshenas ya Shomare bakhshi az ISSABEL
+in1= Shomare Karshenas ya Shomare bakhshi az ISSABEL
+in2= Shomare Karshenas ya Shomare bakhshi az ISSABEL
 out2 = Shari Dovom
 cid = Callerid morede nazar, ** too halati ke aval gharar ast tamas be shomare shahri beravar,
  cid hatman ba CALLERID morede niaz TRUNK porshavad.
